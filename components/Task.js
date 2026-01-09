@@ -4,15 +4,14 @@ import dayjs from "dayjs";
 import "dayjs/locale/fr";
 import calendar from "dayjs/plugin/calendar";
 import Checkbox from "expo-checkbox";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, Vibration, View } from "react-native";
 import ReanimatedSwipeable from "react-native-gesture-handler/ReanimatedSwipeable";
-import TextPrimary from "./text/TextPrimary";
-import TextSecondary from "./text/TextSecondary";
+import CardText from "./text/CardText";
 
 dayjs.extend(calendar);
 dayjs.locale("fr");
 
-const Task = ({ title, createAt, completed, onToggle, onDelete, onEdit }) => {
+const Task = ({ title, iconName, createAt, completed, onToggle, onDelete, onEdit }) => {
 
     const renderRightActions = (progression, drag) => {
         return (
@@ -21,12 +20,11 @@ const Task = ({ title, createAt, completed, onToggle, onDelete, onEdit }) => {
                 onPress={onDelete}
                 style={[
                     styles.actionBtn, {
-                        backgroundColor: "#e43737ff",
-                        marginStart: 10
+                        backgroundColor: Colors.red
                     }
                 ]}
             >
-                <Ionicons name="trash" size={25} color={Colors.textPrimary} />
+                <Ionicons name="trash" size={25} color={Colors.textWhite} />
             </TouchableOpacity>
         );
     };
@@ -35,15 +33,16 @@ const Task = ({ title, createAt, completed, onToggle, onDelete, onEdit }) => {
         return (
             <TouchableOpacity
                 activeOpacity={0.9}
-                onPress={onEdit}
+                onPress={completed ? undefined : onEdit}
+                disabled={completed}
                 style={[
                     styles.actionBtn, {
                         backgroundColor: Colors.primary,
-                        marginEnd: 10
+                        opacity: completed ? 0.5 : 1
                     }
                 ]}
             >
-                <Ionicons name="pencil" size={25} color={Colors.textPrimary} />
+                <Ionicons name="pencil" size={25} color={Colors.textWhite} />
             </TouchableOpacity>
         );
     };
@@ -63,28 +62,44 @@ const Task = ({ title, createAt, completed, onToggle, onDelete, onEdit }) => {
             renderRightActions={renderRightActions}
             renderLeftActions={renderLeftActions}
             enableTrackpadTwoFingerGesture
-        >
+            onSwipeableOpen={(direction) => {
+                if (direction === "right" && !completed) {
+                    Vibration.vibrate(50);
+                    onEdit();
+                } else if (direction === "left") {
+                    Vibration.vibrate(50);
+                    onDelete();
+                }
+            }}
+            containerStyle={{
+                overflow: "hidden",
+                borderRadius: 10
+            }}
+            >
             <View style={styles.taskContainer}>
-                <View style={[
-                    styles.colorBar,
-                    { backgroundColor: completed ? Colors.primary : "#e43737ff" }
-                ]} />
-                <View>
-                    <TextPrimary>
-                        <Text style={completed && styles.textDone}>{title}</Text>
-                    </TextPrimary>
-                    {completed == false && (
-                        <TextSecondary>
-                            <Text style={{ fontSize: 13 }}>{displayDate}</Text>
-                        </TextSecondary>
-                    )}
+                <View style={styles.wrapper}>
+                    <View style={[styles.wrapperIcon, {
+                        backgroundColor: completed ? Colors.primary : Colors.red
+                    }]}> 
+                        <Ionicons name={iconName} size={25} color={Colors.textWhite} />
+                    </View>
+                    <View style={{ flex: 1 }}>
+                        <CardText color={Colors.textPrimary}>
+                            <Text style={completed && styles.textDone}>{title}</Text>
+                        </CardText>
+                        {completed === false && (
+                            <CardText color={Colors.textSecondary}>
+                                <Text style={{ fontSize: 13 }}>{displayDate}</Text>
+                            </CardText>
+                        )}
+                    </View>
+                    <Checkbox
+                        value={completed}
+                        onValueChange={onToggle}
+                        color={completed ? Colors.primary : Colors.textSecondary}
+                        style={{ width: 28, height: 28, borderRadius: 50 }}
+                    />
                 </View>
-                <Checkbox
-                    value={completed}
-                    onValueChange={onToggle}
-                    color={completed ? Colors.primary : undefined}
-                    style={{ width: 28, height: 28, borderRadius: 8 }}
-                />
             </View>
         </ReanimatedSwipeable>
     );
@@ -92,33 +107,26 @@ const Task = ({ title, createAt, completed, onToggle, onDelete, onEdit }) => {
 
 const styles = StyleSheet.create({
     taskContainer: {
-        justifyContent: "space-between",
+        backgroundColor: Colors.whiteGray,
+        padding: 15
+    },
+    wrapper: {
         flexDirection: "row",
         alignItems: "center",
-        gap: 10,
-        backgroundColor: Colors.card,
-        paddingVertical: 18,
-        paddingHorizontal: 15,
-        borderTopEndRadius: 8,
-        borderEndEndRadius: 8,
-        marginVertical: 5,
-    },
-    colorBar: {
-        padding: 2,
-        position: "absolute",
-        top: 0,
-        bottom: 0
+        gap: 12
     },
     actionBtn: {
         justifyContent: "center",
         alignItems: "center",
-        borderRadius: 8,
-        padding: 30,
-        marginVertical: 5
+        width: 60
     },
     textDone: {
         textDecorationLine: "line-through",
         color: Colors.textSecondary
+    },
+    wrapperIcon: {
+        borderRadius: 10,
+        padding: 10
     }
 });
 

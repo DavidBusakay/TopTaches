@@ -1,12 +1,15 @@
-import { Stack } from "expo-router";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import AppNavigator from "./navigations/AppNavigator";
 import { StatusBar } from "react-native";
 import Colors from "@/constants/Colors";
 
-export default function RootLayout() {
-  return (
-    <>
-      <StatusBar barStyle={"light-content"} backgroundColor={Colors.bg} />
-      <Stack screenOptions={{ headerShown: false }} />
-    </>
-  );
-}
+const RootLayout = () => {
+	return (
+		<GestureHandlerRootView style={{ flex: 1 }}>
+			<StatusBar barStyle={"light-content"} backgroundColor={Colors.primary} />
+			<AppNavigator />
+		</GestureHandlerRootView>
+	);
+};
+
+export default RootLayout;

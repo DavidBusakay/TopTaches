@@ -1,17 +1,17 @@
 import { Text } from "react-native";
-import Colors from "@/constants/Colors";
 import usePoppinsFont from "@/hooks/usePoppinsFont";
 
-const CustomTitle = ({ ...rest }) => {
+const CardText = ({ color, ...rest }) => {
     const { fonts } = usePoppinsFont();
     return <Text
         style={{
-            fontFamily: fonts.bold,
-            fontSize: 20,
-            color: Colors.textPrimary
+            fontFamily: fonts.medium,
+            fontSize: 16,
+            color: color
         }}
+        numberOfLines={1}
         { ...rest }
     />;
 }
 
-export default CustomTitle;
+export default CardText;

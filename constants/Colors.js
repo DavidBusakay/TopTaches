@@ -1,10 +1,13 @@
 const Colors = {
-    "bg": "#1A2421",
-    "card": "#2D3E35",
+    "bg": "#fff",
+    "card": "#92e4aeff",
     "primary": "#50C878",
     "secondary": "#A0AFA0",
-    "textPrimary": "#FFFFFF",
-    "textSecondary": "#B0C4B0"
+    "textPrimary": "#000",
+    "textSecondary": "#6b6b6bff",
+    "textWhite": "#fff",
+    "whiteGray": "#efefef",
+    "red": "#e43737ff"
 }
 
 export default Colors;

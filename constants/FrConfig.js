@@ -1,0 +1,25 @@
+const FrConfig = {
+    monthNames: [
+        "Janvier", "Février", "Mars", "Avril", "Mai",
+		"Juin", "Juillet", "Aout", "Septembre",
+		"Octobre", "Novembre", "Décembre"
+    ],
+    monthNamesShort: [
+        "Janv", "Févr", "Mars", "Avril", "Mai",
+		"Juin", "Juil", "Aout", "Sept",
+		"Oct", "Nov", "Déc"
+    ],
+    dayNames: [
+        "Lundi", "Mardi", "Mercredi", "Jeudi",
+		"Vendredi", "Samedi", "Dimanche"
+    ],
+    dayNamesShort: [
+        "Lun", "Mar", "Mer", "Jeu",
+		"Ven", "Sam", "Dim"
+    ],
+    today: "Aujourd'hui",
+    yearLetter: " ",
+    monthLetter: " ",
+};
+
+export default FrConfig;

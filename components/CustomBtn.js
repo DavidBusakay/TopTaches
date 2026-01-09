@@ -1,23 +1,23 @@
 import { TouchableOpacity } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
 import Colors from "@/constants/Colors";
 
-const AddBtn = ({ onPress }) => {
+const CustomBtn = ({ onPress, disable, ...rest }) => {
     return (
         <TouchableOpacity
             activeOpacity={0.9}
             onPress={onPress}
+            disabled={disable}
             style={{
                 justifyContent: "center",
                 alignItems: "center",
                 backgroundColor: Colors.primary,
+                opacity: disable ? 0.5 : 1,
                 borderRadius: 8,
                 padding: 10
             }}
-        >
-            <Ionicons name="add" size={25} color={Colors.textPrimary} />
-        </TouchableOpacity>
+            {...rest}
+        />
     );
 }
 
-export default AddBtn;
+export default CustomBtn;

@@ -2,24 +2,23 @@ import { TextInput } from "react-native";
 import Colors from "@/constants/Colors";
 import usePoppinsFont from "@/hooks/usePoppinsFont";
 
-const CustomInput = ({ value, onChangeText }) => {
+const CustomInput = ({ value, onChangeText, placeholder }) => {
     const { fonts } = usePoppinsFont();
     return (
         <TextInput
-            placeholder="Nouvelle tâche"
+            placeholder={placeholder ?? ""}
             placeholderTextColor="#b8b8b8ff"
             value={value}
             onChangeText={onChangeText}
             selectionColor={Colors.primary}
             style={{
-                flex: 1,
                 backgroundColor: "#fff",
                 color: "#000",
                 fontFamily: fonts.medium,
                 fontSize: 16,
                 borderStyle: "solid",
                 borderWidth: 1,
-                borderColor: "#859989ff",
+                borderColor: "rgba(0, 0, 0, 0.1)",
                 borderRadius: 8,
                 paddingHorizontal: 15,
                 height: 50
