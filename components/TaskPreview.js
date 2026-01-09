@@ -29,7 +29,7 @@ const TaskPreview = ({ title, iconName }) => {
                     value={null}
                     onValueChange={() => {}}
                     disabled={true}
-                    style={{ width: 28, height: 28, borderRadius: 50 }}
+                    style={{ width: 28, height: 28, borderRadius: 10 }}
                 />
             </View>
         </View>

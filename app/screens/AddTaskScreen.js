@@ -45,7 +45,7 @@ const AddTaskScreen = () => {
             iconName: selectedCategory ? selectedCategory.iconName : "apps",
             category: selectedCategory ? selectedCategory.name : "Autres",
             completed: false,
-            createAt: new Date().toISOString()
+            createdAt: new Date().toISOString()
         };
         setTasks(prevTasks => [newTask, ...prevTasks]);
 
@@ -121,7 +121,8 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: Colors.bg,
-        padding: 10
+        paddingHorizontal: 15,
+        paddingVertical: 20
     }
 });
 

@@ -97,7 +97,7 @@ const Task = ({ title, iconName, createAt, completed, onToggle, onDelete, onEdit
                         value={completed}
                         onValueChange={onToggle}
                         color={completed ? Colors.primary : Colors.textSecondary}
-                        style={{ width: 28, height: 28, borderRadius: 50 }}
+                        style={{ width: 28, height: 28, borderRadius: 10 }}
                     />
                 </View>
             </View>

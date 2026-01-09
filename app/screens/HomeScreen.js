@@ -16,6 +16,8 @@ import FrConfig from "@/constants/FrConfig";
 import toggleTask from "@/functions/toggleTask";
 import deleteTask from "@/functions/deleteTask";
 import countTasksUncompleted from "@/functions/countTasksUncompleted";
+import filteredTasks from "@/functions/filteredTasks";
+import markedDays from "@/functions/markedDays";
 
 // Configuration du calendrier en français
 LocaleConfig.locales["fr"] = {
@@ -127,14 +129,17 @@ const HomeScreen = () => {
 				<WeekCalendar
 					current={selectedDate.replace(/\//g, "-")}
 					onDayPress={(day) => setSelectedDate(day.dateString.replace(/-/g, "/"))}
+					markedDates={markedDays(tasks)}
 					theme={{
-						backgroundColor: Colors.bg,
 						calendarBackground: Colors.bg,
 						selectedDayBackgroundColor: Colors.primary,
 						selectedDayTextColor: Colors.textWhite,
 						todayTextColor: Colors.primary,
 						dayTextColor: Colors.textSecondary,
-						textDisabledColor: "gray"
+						textDisabledColor: "gray",
+						textDayFontFamily: fonts.medium,
+						dotColor: Colors.primary,
+						selectedDotColor: "#fff"
 					}}
 				/>
 			</CalendarProvider>
@@ -142,18 +147,18 @@ const HomeScreen = () => {
 			{/* Liste des tâches */}
 			<View style={styles.inner}>
 				<TextSecondary>
-					A faire ({countTasksUncompleted(tasks)})
+					A faire ({countTasksUncompleted(tasks, selectedDate)})
 				</TextSecondary>
 
 				<FlatList
-					data={tasks}
+					data={filteredTasks(tasks, selectedDate)}
 					keyExtractor={(item) => item.id.toString()}
 					renderItem={({ item }) => (
 						<Task
 							title={item.title}
 							iconName={item.iconName}
 							completed={item.completed}
-							createAt={item.createAt}
+							createAt={item.createdAt}
 							onToggle={() => toggleTask(item.id, setTasks)}
 							onDelete={() => handleDelete(item.id)}
 							onEdit={() => {}}
@@ -198,6 +203,7 @@ const HomeScreen = () => {
 				visible={isModalVisible}
 				transparent={true}
 				animationType="fade"
+				onRequestClose={() => setModalVisible(false)}
 			>
 				<View style={styles.modalOverlay}>
 					<View style={styles.calendarCard}>
@@ -214,7 +220,6 @@ const HomeScreen = () => {
 								setModalVisible(false);
 							}}
 							configs={FrConfig}
-							locale="fr"
 							options={{
 								backgroundColor: "#fff",
 								textHeaderColor: Colors.primary,
@@ -239,11 +244,11 @@ const styles = StyleSheet.create({
 	inner: {
 		flex: 1,
 		justifyContent: "flex-end",
-		padding: 10
+		padding: 15
 	},
 	addBtn: {
 		position: "absolute",
-		right: 15,
+		right: 25,
 		bottom: 40,
 		backgroundColor: Colors.primary,
 		padding: 20,
