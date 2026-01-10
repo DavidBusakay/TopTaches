@@ -16,7 +16,6 @@ import { useNavigation } from "@react-navigation/native";
 import dayjs from "dayjs";
 import React, { useEffect, useState } from "react";
 import {
-  Alert,
   FlatList,
   Modal,
   StyleSheet,
@@ -29,6 +28,7 @@ import {
   LocaleConfig,
   WeekCalendar,
 } from "react-native-calendars";
+import { showMessage } from "react-native-flash-message";
 import DatePicker from "react-native-modern-datepicker";
 
 // Configuration du calendrier en français
@@ -115,10 +115,15 @@ const HomeScreen = () => {
           setTasks(JSON.parse(savedTasks));
         }
       } catch (_) {
-        Alert.alert(
-          "Erreur",
-          "Une erreur s'est produite lors du chargement des tâches."
-        );
+        showMessage({
+          message: "Erreur de chargement",
+          description:
+            "Une erreur s'est produite lors du chargement des tâches.",
+          type: "danger",
+          icon: "danger",
+          backgroundColor: Colors.red,
+          duration: 3000,
+        });
       }
     };
     loadTasks();
@@ -129,34 +134,19 @@ const HomeScreen = () => {
       try {
         await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(tasks));
       } catch (_) {
-        Alert.alert(
-          "Erreur",
-          "Une erreur s'est produite lors de la sauvegarde."
-        );
+        showMessage({
+          message: "Erreur de sauvegarde",
+          description:
+            "Une erreur s'est produite lors de la sauvegarde des tâches.",
+          type: "danger",
+          icon: "danger",
+          backgroundColor: Colors.red,
+          duration: 3000,
+        });
       }
     };
     saveTasks();
   }, [tasks]);
-
-  const handleDelete = (id) => {
-    if (!id) return;
-    Alert.alert(
-      "Confirmation",
-      "Voulez-vous vraiment supprimer cette tache ?",
-      [
-        {
-          text: "Annuler",
-          onPress: () => {},
-          style: "default",
-        },
-        {
-          text: "Supprimer",
-          onPress: () => deleteTask(id, setTasks),
-          style: "default",
-        },
-      ]
-    );
-  };
 
   return (
     <View style={styles.container}>
@@ -201,8 +191,13 @@ const HomeScreen = () => {
               completed={item.completed}
               createAt={item.createdAt}
               onToggle={() => toggleTask(item.id, setTasks)}
-              onDelete={() => handleDelete(item.id)}
-              onEdit={() => {}}
+              onDelete={() => deleteTask(item.id, setTasks)}
+              onUpdate={() => {
+                navigation.navigate("UpdateTask", {
+                  task: item,
+                  setTasks: setTasks,
+                });
+              }}
             />
           )}
           contentContainerStyle={{

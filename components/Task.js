@@ -24,7 +24,7 @@ const Task = ({
   completed,
   onToggle,
   onDelete,
-  onEdit,
+  onUpdate,
 }) => {
   const renderRightActions = (progression, drag) => {
     return (
@@ -47,7 +47,7 @@ const Task = ({
     return (
       <TouchableOpacity
         activeOpacity={0.9}
-        onPress={completed ? undefined : onEdit}
+        onPress={completed ? undefined : onUpdate}
         disabled={completed}
         style={[
           styles.actionBtn,
@@ -79,10 +79,11 @@ const Task = ({
       renderRightActions={renderRightActions}
       renderLeftActions={renderLeftActions}
       enableTrackpadTwoFingerGesture
+      overshootRight={true}
       onSwipeableOpen={(direction) => {
         if (direction === "right" && !completed) {
           Vibration.vibrate(50);
-          onEdit();
+          onUpdate();
         } else if (direction === "left") {
           Vibration.vibrate(50);
           onDelete();

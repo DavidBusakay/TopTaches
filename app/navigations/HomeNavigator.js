@@ -5,6 +5,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { TouchableOpacity } from "react-native";
 import AddTaskScreen from "../screens/AddTaskScreen";
 import HomeScreen from "../screens/HomeScreen";
+import UpdateTaskScreen from "../screens/UpdateTaskScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -35,6 +36,10 @@ const HomeNavigator = ({ navigation }) => {
             <TouchableOpacity
               activeOpacity={0.9}
               onPress={() => navigation.openDrawer()}
+              style={{
+                borderRadius: 50,
+                padding: 3,
+              }}
             >
               <Ionicons name="menu" size={25} color={Colors.textWhite} />
             </TouchableOpacity>
@@ -46,6 +51,13 @@ const HomeNavigator = ({ navigation }) => {
         component={AddTaskScreen}
         options={{
           title: "Ajouter une tâche",
+        }}
+      />
+      <Stack.Screen
+        name="UpdateTask"
+        component={UpdateTaskScreen}
+        options={{
+          title: "Modifier une tâche",
         }}
       />
     </Stack.Navigator>

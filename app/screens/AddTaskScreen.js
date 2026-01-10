@@ -1,7 +1,7 @@
 import Category from "@/components/Category";
 import CustomBtn from "@/components/CustomBtn";
-import TaskPreview from "@/components/TaskPreview";
 import CustomInput from "@/components/CustomInput";
+import TaskPreview from "@/components/TaskPreview";
 import CardText from "@/components/text/CardText";
 import TextSecondary from "@/components/text/TextSecondary";
 import Colors from "@/constants/Colors";
@@ -11,11 +11,12 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { useState } from "react";
 import { Alert, FlatList, StyleSheet, View } from "react-native";
+import { showMessage } from "react-native-flash-message";
 
 const AddTaskScreen = () => {
   const navigation = useNavigation();
   const route = useRoute();
-  const { tasks, setTasks } = route.params;
+  const { tasks, setTasks } = route.params || {};
 
   const [titleTask, setTitleTask] = useState("");
   const [categories, setCategories] = useState([
@@ -26,7 +27,12 @@ const AddTaskScreen = () => {
     { id: "5", name: "Famille", iconName: "heart", selected: false },
     { id: "6", name: "Nourriture", iconName: "fast-food", selected: false },
     { id: "7", name: "Détente", iconName: "leaf", selected: false },
-    { id: "8", name: "Divertissement", iconName: "game-controller", selected: false,},
+    {
+      id: "8",
+      name: "Divertissement",
+      iconName: "game-controller",
+      selected: false,
+    },
     { id: "9", name: "Autres", iconName: "apps", selected: false },
   ]);
   const [isDisable, setIsDisable] = useState(true);
@@ -54,6 +60,14 @@ const AddTaskScreen = () => {
         STORAGE_KEY,
         JSON.stringify([newTask, ...tasks])
       );
+      showMessage({
+        message: "Ajout",
+        description: "La tâche a été ajoutée avec succès !",
+        type: "success",
+        icon: "success",
+        backgroundColor: Colors.primary,
+        duration: 3000,
+      });
       setTitleTask("");
       navigation.goBack();
     } catch (_) {
