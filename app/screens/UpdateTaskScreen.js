@@ -1,18 +1,18 @@
 import CustomBtn from "@/components/CustomBtn";
 import CustomInput from "@/components/CustomInput";
 import TaskPreview from "@/components/TaskPreview";
-import CardText from "@/components/text/CardText";
-import TextSecondary from "@/components/text/TextSecondary";
 import Colors from "@/constants/Colors";
 import updateTask from "@/functions/updateTask";
+import usePoppinsFont from "@/hooks/usePoppinsFont";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { useState } from "react";
-import { Alert, StyleSheet, View } from "react-native";
+import { Alert, StyleSheet, Text, View } from "react-native";
 import { showMessage } from "react-native-flash-message";
 
 const UpdateTaskScreen = () => {
   const navigation = useNavigation();
   const route = useRoute();
+  const { fonts } = usePoppinsFont();
   const { task, setTasks } = route.params || {};
 
   const [titleTask, setTitleTask] = useState(task ? task.title : "");
@@ -42,13 +42,29 @@ const UpdateTaskScreen = () => {
     <View style={styles.container}>
       {/* Preview */}
       <View style={{ marginBottom: 30 }}>
-        <TextSecondary>Prévisualisation</TextSecondary>
+        <Text
+          style={{
+            fontFamily: fonts.medium,
+            fontSize: 16,
+            color: Colors.textSecondary,
+          }}
+        >
+          Prévisualisation
+        </Text>
         <TaskPreview title={titleTask} iconName={task.iconName} />
       </View>
 
       {/* Titre de la tâche */}
       <View style={{ marginBottom: 30 }}>
-        <TextSecondary>Titre</TextSecondary>
+        <Text
+          style={{
+            fontFamily: fonts.medium,
+            fontSize: 16,
+            color: Colors.textSecondary,
+          }}
+        >
+          Titre
+        </Text>
         <CustomInput
           value={titleTask}
           onChangeText={(text) => {
@@ -61,7 +77,15 @@ const UpdateTaskScreen = () => {
 
       {/* Bouton de modification */}
       <CustomBtn onPress={handleUpdateTask} disable={isDisable}>
-        <CardText color={Colors.textWhite}>Modifier</CardText>
+        <Text
+          style={{
+            fontFamily: fonts.bold,
+            fontSize: 16,
+            color: Colors.textWhite,
+          }}
+        >
+          Modifier
+        </Text>
       </CustomBtn>
     </View>
   );

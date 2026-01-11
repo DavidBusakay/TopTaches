@@ -1,6 +1,4 @@
 import Task from "@/components/Task";
-import CardText from "@/components/text/CardText";
-import TextSecondary from "@/components/text/TextSecondary";
 import Colors from "@/constants/Colors";
 import FrConfig from "@/constants/FrConfig";
 import STORAGE_KEY from "@/constants/Storage";
@@ -19,6 +17,7 @@ import {
   FlatList,
   Modal,
   StyleSheet,
+  Text,
   TouchableOpacity,
   Vibration,
   View,
@@ -93,9 +92,15 @@ const HomeScreen = () => {
           onPress={() => setModalVisible(true)}
           style={{ flexDirection: "row", alignItems: "center" }}
         >
-          <CardText color={Colors.textWhite}>
+          <Text
+            style={{
+              fontFamily: fonts.medium,
+              fontSize: 16,
+              color: Colors.textWhite,
+            }}
+          >
             {dayjs(selectedDate).format("MMM YYYY").toUpperCase()}
-          </CardText>
+          </Text>
           <Ionicons
             name="chevron-down"
             size={20}
@@ -105,6 +110,7 @@ const HomeScreen = () => {
         </TouchableOpacity>
       ),
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [navigation, selectedDate]);
 
   useEffect(() => {
@@ -177,9 +183,15 @@ const HomeScreen = () => {
 
       {/* Liste des tâches */}
       <View style={styles.inner}>
-        <TextSecondary>
+        <Text
+          style={{
+            fontFamily: fonts.medium,
+            fontSize: 16,
+            color: Colors.textSecondary,
+          }}
+        >
           A faire ({countTasksUncompleted(tasks, selectedDate)})
-        </TextSecondary>
+        </Text>
 
         <FlatList
           data={filteredTasks(tasks, selectedDate)}
@@ -214,7 +226,15 @@ const HomeScreen = () => {
                 alignItems: "center",
               }}
             >
-              <TextSecondary>Aucune tâche</TextSecondary>
+              <Text
+                style={{
+                  fontFamily: fonts.medium,
+                  fontSize: 13,
+                  color: Colors.textSecondary,
+                }}
+              >
+                Aucune tâche
+              </Text>
             </View>
           }
           keyboardShouldPersistTaps="handled"

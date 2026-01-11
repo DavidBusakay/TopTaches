@@ -1,4 +1,5 @@
 import Colors from "@/constants/Colors";
+import usePoppinsFont from "@/hooks/usePoppinsFont";
 import { Ionicons } from "@expo/vector-icons";
 import dayjs from "dayjs";
 import "dayjs/locale/fr";
@@ -12,7 +13,6 @@ import {
   View,
 } from "react-native";
 import ReanimatedSwipeable from "react-native-gesture-handler/ReanimatedSwipeable";
-import CardText from "./text/CardText";
 
 dayjs.extend(calendar);
 dayjs.locale("fr");
@@ -26,6 +26,8 @@ const Task = ({
   onDelete,
   onUpdate,
 }) => {
+  const { fonts } = usePoppinsFont();
+
   const renderRightActions = (progression, drag) => {
     return (
       <TouchableOpacity
@@ -62,14 +64,7 @@ const Task = ({
     );
   };
 
-  const displayDate = createAt
-    ? dayjs(createAt).calendar(null, {
-        sameDay: "[Aujourd'hui à] HH:mm",
-        lastDay: "[Hier à] HH:mm",
-        lastWeek: "dddd [dernier à] HH:mm",
-        sameElse: "DD/MM/YYYY",
-      })
-    : "";
+  const displayTime = createAt ? dayjs(createAt).format("HH:mm") : "";
 
   return (
     <ReanimatedSwipeable
@@ -107,14 +102,28 @@ const Task = ({
             <Ionicons name={iconName} size={25} color={Colors.textWhite} />
           </View>
           <View style={{ flex: 1 }}>
-            <CardText color={Colors.textPrimary}>
-              <Text style={completed && styles.textDone}>{title}</Text>
-            </CardText>
-            {completed === false && (
-              <CardText color={Colors.textSecondary}>
-                <Text style={{ fontSize: 13 }}>{displayDate}</Text>
-              </CardText>
-            )}
+            <Text
+              style={[
+                completed && styles.textDone,
+                {
+                  fontFamily: fonts.medium,
+                  fontSize: 16,
+                  color: Colors.textPrimary,
+                },
+              ]}
+              numberOfLines={2}
+            >
+              {title}
+            </Text>
+            <Text
+              style={{
+                fontFamily: fonts.medium,
+                fontSize: 13,
+                color: Colors.textSecondary,
+              }}
+            >
+              {displayTime}
+            </Text>
           </View>
           <Checkbox
             value={completed}

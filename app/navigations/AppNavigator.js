@@ -1,52 +1,17 @@
-import Colors from "@/constants/Colors";
-import usePoppinsFont from "@/hooks/usePoppinsFont";
-import { Ionicons } from "@expo/vector-icons";
-import { createDrawerNavigator } from "@react-navigation/drawer";
-import HomeNavigator from "./HomeNavigator";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import OnboardingSreen from "../screens/OnboarbingScreen";
+import SplashScreen from "../screens/SplashScreen";
+import DrawerNavigator from "./DrawerNavigator";
 
-const Drawer = createDrawerNavigator();
+const Stack = createNativeStackNavigator();
 
 const AppNavigator = () => {
-  const { fonts } = usePoppinsFont();
   return (
-    <Drawer.Navigator
-      screenOptions={{
-        headerStyle: {
-          backgroundColor: Colors.primary,
-          elevation: 0,
-          shadowOpacity: 0,
-          borderBottomWidth: 0,
-        },
-        headerTintColor: Colors.cardText,
-        headerTitleStyle: {
-          fontFamily: fonts.medium,
-        },
-        drawerActiveTintColor: Colors.primary,
-        drawerType: "slide",
-        drawerStyle: {
-          width: 300,
-        },
-        drawerItemStyle: {
-          borderRadius: 10,
-        },
-        drawerLabelStyle: {
-          fontFamily: fonts.medium,
-          fontSize: 16,
-        },
-      }}
-    >
-      <Drawer.Screen
-        name="(Home)"
-        component={HomeNavigator}
-        options={{
-          title: "Accueil",
-          drawerIcon: ({ color }) => (
-            <Ionicons name="home" size={22} color={color} />
-          ),
-          headerShown: false,
-        }}
-      />
-    </Drawer.Navigator>
+    <Stack.Navigator screenOptions={{ headerShown: false, animation: "fade" }}>
+      <Stack.Screen name="SplashScreen" component={SplashScreen} />
+      <Stack.Screen name="Onboarding" component={OnboardingSreen} />
+      <Stack.Screen name="Main" component={DrawerNavigator} />
+    </Stack.Navigator>
   );
 };
 

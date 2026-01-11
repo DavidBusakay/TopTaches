@@ -1,9 +1,11 @@
 import Colors from "@/constants/Colors";
+import usePoppinsFont from "@/hooks/usePoppinsFont";
 import { Ionicons } from "@expo/vector-icons";
-import { Pressable, StyleSheet } from "react-native";
-import CardText from "./text/CardText";
+import { Pressable, StyleSheet, Text } from "react-native";
 
 const Category = ({ name, iconName, active, onPress }) => {
+  const { fonts } = usePoppinsFont();
+
   return (
     <Pressable
       onPress={onPress}
@@ -14,17 +16,20 @@ const Category = ({ name, iconName, active, onPress }) => {
         },
       ]}
     >
-      {active ? (
-        <>
-          <Ionicons name={iconName} size={28} color={Colors.textWhite} />
-          <CardText color={Colors.textWhite}>{name}</CardText>
-        </>
-      ) : (
-        <>
-          <Ionicons name={iconName} size={28} color={Colors.textSecondary} />
-          <CardText color={Colors.textSecondary}>{name}</CardText>
-        </>
-      )}
+      <Ionicons
+        name={iconName}
+        size={28}
+        color={active ? Colors.textWhite : Colors.textSecondary}
+      />
+      <Text
+        style={{
+          fontFamily: fonts.medium,
+          fontSize: 16,
+          color: active ? Colors.textWhite : Colors.textSecondary,
+        }}
+      >
+        {name}
+      </Text>
     </Pressable>
   );
 };

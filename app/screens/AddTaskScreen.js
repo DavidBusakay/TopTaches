@@ -2,20 +2,20 @@ import Category from "@/components/Category";
 import CustomBtn from "@/components/CustomBtn";
 import CustomInput from "@/components/CustomInput";
 import TaskPreview from "@/components/TaskPreview";
-import CardText from "@/components/text/CardText";
-import TextSecondary from "@/components/text/TextSecondary";
 import Colors from "@/constants/Colors";
 import STORAGE_KEY from "@/constants/Storage";
 import toggleCategory from "@/functions/toggleCategory";
+import usePoppinsFont from "@/hooks/usePoppinsFont";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { useState } from "react";
-import { Alert, FlatList, StyleSheet, View } from "react-native";
+import { Alert, FlatList, StyleSheet, Text, View } from "react-native";
 import { showMessage } from "react-native-flash-message";
 
 const AddTaskScreen = () => {
   const navigation = useNavigation();
   const route = useRoute();
+  const { fonts } = usePoppinsFont();
   const { tasks, setTasks } = route.params || {};
 
   const [titleTask, setTitleTask] = useState("");
@@ -80,7 +80,15 @@ const AddTaskScreen = () => {
     <View style={styles.container}>
       {/* Preview */}
       <View style={{ marginBottom: 30 }}>
-        <TextSecondary>Prévisualisation</TextSecondary>
+        <Text
+          style={{
+            fontFamily: fonts.medium,
+            fontSize: 16,
+            color: Colors.textSecondary,
+          }}
+        >
+          Prévisualisation
+        </Text>
         <TaskPreview
           title={titleTask}
           iconName={categories.find((cat) => cat.selected === true).iconName}
@@ -89,7 +97,15 @@ const AddTaskScreen = () => {
 
       {/* Titre de la tâche */}
       <View style={{ marginBottom: 30 }}>
-        <TextSecondary>Titre</TextSecondary>
+        <Text
+          style={{
+            fontFamily: fonts.medium,
+            fontSize: 16,
+            color: Colors.textSecondary,
+          }}
+        >
+          Titre
+        </Text>
         <CustomInput
           value={titleTask}
           onChangeText={(text) => {
@@ -102,7 +118,15 @@ const AddTaskScreen = () => {
 
       {/* Choix d'une catégorie */}
       <View style={{ marginBottom: 30 }}>
-        <TextSecondary>Catégorie</TextSecondary>
+        <Text
+          style={{
+            fontFamily: fonts.medium,
+            fontSize: 16,
+            color: Colors.textSecondary,
+          }}
+        >
+          Catégorie
+        </Text>
         <FlatList
           data={categories}
           keyExtractor={(item) => item.id}
@@ -125,7 +149,15 @@ const AddTaskScreen = () => {
 
       {/* Bouton d'ajout */}
       <CustomBtn onPress={addTask} disable={isDisable}>
-        <CardText color={Colors.textWhite}>Ajouter</CardText>
+        <Text
+          style={{
+            fontFamily: fonts.bold,
+            fontSize: 16,
+            color: Colors.textWhite,
+          }}
+        >
+          Ajouter
+        </Text>
       </CustomBtn>
     </View>
   );
