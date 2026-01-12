@@ -8,9 +8,12 @@ import { useState } from "react";
 import {
   Keyboard,
   KeyboardAvoidingView,
+  Platform,
+  ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
+  TouchableWithoutFeedback,
   View,
 } from "react-native";
 import { showMessage } from "react-native-flash-message";
@@ -23,7 +26,9 @@ const OnboardingSreen = () => {
   const [name, setName] = useState("");
   const [firstname, setFirstname] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [hidePassword, setHidePassword] = useState(true);
+  const [hideConfirmPassword, setHideConfirmPassword] = useState(true);
 
   const onRegister = async () => {
     Keyboard.dismiss();
@@ -48,7 +53,19 @@ const OnboardingSreen = () => {
         type: "danger",
         icon: "danger",
         backgroundColor: Colors.red,
-        duration: 7000,
+        duration: 5000,
+      });
+      return;
+    }
+
+    if (password.trim() !== confirmPassword.trim()) {
+      showMessage({
+        message: "Les deux mots de passe ne correspondent pas.",
+        description: "Assure-toi de bien de confirmer ton mot de passe.",
+        type: "danger",
+        icon: "danger",
+        backgroundColor: Colors.red,
+        duration: 5000,
       });
       return;
     }
@@ -69,7 +86,7 @@ const OnboardingSreen = () => {
         type: "success",
         icon: "success",
         backgroundColor: Colors.primary,
-        duration: 7000,
+        duration: 5000,
       });
       setName("");
       setFirstname("");
@@ -83,97 +100,132 @@ const OnboardingSreen = () => {
         type: "danger",
         icon: "danger",
         backgroundColor: Colors.red,
-        duration: 7000,
+        duration: 5000,
       });
     }
   };
 
   return (
     <SafeAreaView style={styles.container}>
-      <KeyboardAvoidingView behavior="padding" style={{ flex: 1 }}>
-        <View style={styles.inner}>
-          <View style={styles.header}>
-            <Text
-              style={{
-                fontFamily: fonts.bold,
-                fontSize: 28,
-                color: "#fff",
-                textAlign: "center",
-                marginBottom: 5,
-              }}
+      <KeyboardAvoidingView
+        behavior="padding"
+        keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 15}
+        style={{ flex: 1 }}
+      >
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+          <View style={{ flex: 1 }}>
+            <ScrollView
+              showsVerticalScrollIndicator={false}
+              contentContainerStyle={{ flexGrow: 1, paddingBottom: 50 }}
             >
-              TopTâches
-            </Text>
-            <Text
-              style={{
-                fontFamily: fonts.medium,
-                fontSize: 16,
-                color: "#ffffffe0",
-                textAlign: "center",
-                marginBottom: 30,
-              }}
-            >
-              L&apos;application idéale pour gérer tes tâches facilement et
-              rapidement.
-            </Text>
-          </View>
+              <View style={styles.inner}>
+                <View style={styles.header}>
+                  <Text
+                    style={{
+                      fontFamily: fonts.bold,
+                      fontSize: 28,
+                      color: "#fff",
+                      textAlign: "center",
+                      marginBottom: 5,
+                    }}
+                  >
+                    TopTâches
+                  </Text>
+                  <Text
+                    style={{
+                      fontFamily: fonts.medium,
+                      fontSize: 16,
+                      color: "#ffffffe0",
+                      textAlign: "center",
+                      marginBottom: 30,
+                    }}
+                  >
+                    L&apos;application idéale pour gérer tes tâches facilement
+                    et rapidement.
+                  </Text>
+                </View>
 
-          <View style={styles.body}>
-            <View style={{ marginBottom: 20 }}>
-              <Text
-                style={{
-                  fontFamily: fonts.medium,
-                  fontSize: 14,
-                  color: "#ffffffe0",
-                  marginBottom: 5,
-                }}
-              >
-                Nom
-              </Text>
-              <CustomInput
-                value={name}
-                onChangeText={(text) => setName(text)}
-                placeholder="Ton nom"
-              />
-            </View>
+                <View style={styles.body}>
+                  <View style={{ marginBottom: 20 }}>
+                    <Text
+                      style={{
+                        fontFamily: fonts.medium,
+                        fontSize: 16,
+                        color: "#ffffffe0",
+                        marginBottom: 5,
+                      }}
+                    >
+                      Nom
+                    </Text>
+                    <CustomInput
+                      value={name}
+                      onChangeText={(text) => setName(text)}
+                      placeholder="Ton nom"
+                    />
+                  </View>
 
-            <View style={{ marginBottom: 20 }}>
-              <Text
-                style={{
-                  fontFamily: fonts.medium,
-                  fontSize: 14,
-                  color: "#ffffffe0",
-                  marginBottom: 5,
-                }}
-              >
-                Prénom
-              </Text>
-              <CustomInput
-                value={firstname}
-                onChangeText={(text) => setFirstname(text)}
-                placeholder="Ton Prénom"
-              />
-            </View>
+                  <View style={{ marginBottom: 20 }}>
+                    <Text
+                      style={{
+                        fontFamily: fonts.medium,
+                        fontSize: 16,
+                        color: "#ffffffe0",
+                        marginBottom: 5,
+                      }}
+                    >
+                      Prénom
+                    </Text>
+                    <CustomInput
+                      value={firstname}
+                      onChangeText={(text) => setFirstname(text)}
+                      placeholder="Ton Prénom"
+                    />
+                  </View>
 
-            <View style={{ marginBottom: 20 }}>
-              <Text
-                style={{
-                  fontFamily: fonts.medium,
-                  fontSize: 14,
-                  color: "#ffffffe0",
-                  marginBottom: 5,
-                }}
-              >
-                Mot de passe
-              </Text>
-              <PasswordInput
-                value={password}
-                onChangeText={(text) => setPassword(text)}
-                placeholder="Ton mot de passe"
-                onHide={() => setHidePassword(!hidePassword)}
-                isHide={hidePassword}
-              />
-            </View>
+                  <View style={{ marginBottom: 20 }}>
+                    <Text
+                      style={{
+                        fontFamily: fonts.medium,
+                        fontSize: 16,
+                        color: "#ffffffe0",
+                        marginBottom: 5,
+                      }}
+                    >
+                      Mot de passe
+                    </Text>
+                    <PasswordInput
+                      value={password}
+                      onChangeText={(text) => setPassword(text)}
+                      placeholder="Ton mot de passe"
+                      onHide={() => setHidePassword(!hidePassword)}
+                      isHide={hidePassword}
+                    />
+                  </View>
+
+                  <View style={{ marginBottom: 20 }}>
+                    <Text
+                      style={{
+                        fontFamily: fonts.medium,
+                        fontSize: 16,
+                        color: "#ffffffe0",
+                        marginBottom: 5,
+                      }}
+                    >
+                      Confirmation mot de passe
+                    </Text>
+                    <PasswordInput
+                      value={confirmPassword}
+                      onChangeText={(text) => setConfirmPassword(text)}
+                      placeholder="Confirme ton mot de passe"
+                      onHide={() =>
+                        setHideConfirmPassword(!hideConfirmPassword)
+                      }
+                      isHide={hideConfirmPassword}
+                    />
+                  </View>
+                </View>
+              </View>
+            </ScrollView>
 
             <TouchableOpacity
               activeOpacity={0.9}
@@ -191,7 +243,7 @@ const OnboardingSreen = () => {
               </Text>
             </TouchableOpacity>
           </View>
-        </View>
+        </TouchableWithoutFeedback>
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
@@ -226,6 +278,7 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
+    elevation: 20,
   },
 });
 

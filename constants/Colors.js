@@ -1,10 +1,9 @@
 const Colors = {
   bg: "#fff",
-  card: "#92e4aeff",
-  primary: "#50C878",
-  secondary: "#A0AFA0",
+  card: "#6ab583",
+  primary: "#3d6d4d",
   textPrimary: "#000",
-  textSecondary: "#6b6b6bff",
+  textSecondary: "#939393",
   textWhite: "#fff",
   whiteGray: "#efefef",
   red: "#e43737ff",

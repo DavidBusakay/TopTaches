@@ -1,8 +1,9 @@
+import BottomSheet from "@/components/BottomSheet";
 import Task from "@/components/Task";
 import Colors from "@/constants/Colors";
 import FrConfig from "@/constants/FrConfig";
 import STORAGE_KEY from "@/constants/Storage";
-import countTasksUncompleted from "@/functions/countTasksUncompleted";
+import countTasks from "@/functions/countTasks";
 import deleteTask from "@/functions/deleteTask";
 import filteredTasks from "@/functions/filteredTasks";
 import markedDays from "@/functions/markedDays";
@@ -12,7 +13,7 @@ import { Ionicons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
 import dayjs from "dayjs";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import {
   FlatList,
   Modal,
@@ -76,15 +77,24 @@ LocaleConfig.defaultLocale = "fr";
 const HomeScreen = () => {
   const navigation = useNavigation();
   const { fonts } = usePoppinsFont();
+  const refRBSheet = useRef();
 
   const [selectedDate, setSelectedDate] = useState(
     dayjs().format("YYYY/MM/DD")
   );
   const [isModalVisible, setModalVisible] = useState(false);
   const [tasks, setTasks] = useState([]);
+  const [filter, setFilter] = useState("all");
+  const [filterLabel, setFilterLabel] = useState("Toutes les tâches");
 
-  // On configure le header dynamiquement pour réagir au clic
-  React.useLayoutEffect(() => {
+  // Liste de filtres
+  const filters = [
+    { label: "Toutes les tâches", value: "all", icon: "list" },
+    { label: "A faire", value: "todo", icon: "flash" },
+    { label: "Terminées", value: "done", icon: "checkmark-done" },
+  ];
+
+  useLayoutEffect(() => {
     navigation.setOptions({
       headerTitle: () => (
         <TouchableOpacity
@@ -95,7 +105,7 @@ const HomeScreen = () => {
           <Text
             style={{
               fontFamily: fonts.medium,
-              fontSize: 16,
+              fontSize: 17,
               color: Colors.textWhite,
             }}
           >
@@ -107,6 +117,18 @@ const HomeScreen = () => {
             color={Colors.textWhite}
             style={{ marginLeft: 8 }}
           />
+        </TouchableOpacity>
+      ),
+      headerRight: () => (
+        <TouchableOpacity
+          activeOpacity={0.9}
+          onPress={() => refRBSheet.current?.open()}
+          style={{
+            borderRadius: 50,
+            padding: 3,
+          }}
+        >
+          <Ionicons name="filter" size={25} color={Colors.textWhite} />
         </TouchableOpacity>
       ),
     });
@@ -190,11 +212,11 @@ const HomeScreen = () => {
             color: Colors.textSecondary,
           }}
         >
-          A faire ({countTasksUncompleted(tasks, selectedDate)})
+          {filterLabel} ({countTasks(tasks, filter, selectedDate)})
         </Text>
 
         <FlatList
-          data={filteredTasks(tasks, selectedDate)}
+          data={filteredTasks(tasks, filter, selectedDate)}
           keyExtractor={(item) => item.id.toString()}
           renderItem={({ item }) => (
             <Task
@@ -292,6 +314,16 @@ const HomeScreen = () => {
           </View>
         </View>
       </Modal>
+
+      {/* BOTTOM SHEET */}
+      <BottomSheet
+        ref={refRBSheet}
+        list={filters}
+        onPress={(selectedFilter) => {
+          setFilter(selectedFilter.value);
+          setFilterLabel(selectedFilter.label);
+        }}
+      />
     </View>
   );
 };

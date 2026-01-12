@@ -19,6 +19,7 @@ const PasswordInput = ({
         value={value}
         onChangeText={onChangeText}
         secureTextEntry={isHide}
+        autoCapitalize="none"
         selectionColor={Colors.primary}
         style={[
           styles.input,
@@ -27,7 +28,10 @@ const PasswordInput = ({
           },
         ]}
       />
-      <Pressable onPress={onHide} style={{ padding: 5 }}>
+      <Pressable
+        onPress={onHide}
+        style={{ paddingVertical: 8, paddingHorizontal: 12 }}
+      >
         <Ionicons
           name={isHide ? "eye-off" : "eye"}
           size={25}
@@ -48,13 +52,13 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "rgba(0, 0, 0, 0.1)",
     borderRadius: 8,
-    height: 50,
-    paddingHorizontal: 11,
   },
   input: {
     flex: 1,
     color: "#000",
     fontSize: 16,
+    height: 50,
+    paddingHorizontal: 15,
   },
 });
 

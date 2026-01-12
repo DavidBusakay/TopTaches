@@ -6,7 +6,17 @@ import updateTask from "@/functions/updateTask";
 import usePoppinsFont from "@/hooks/usePoppinsFont";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { useState } from "react";
-import { Alert, StyleSheet, Text, View } from "react-native";
+import {
+  Alert,
+  Keyboard,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableWithoutFeedback,
+  View,
+} from "react-native";
 import { showMessage } from "react-native-flash-message";
 
 const UpdateTaskScreen = () => {
@@ -20,7 +30,7 @@ const UpdateTaskScreen = () => {
 
   const handleUpdateTask = () => {
     if (titleTask.trim().length === 0) {
-      Alert.alert("Erreur", "Saisissez d'abord le titre de la tâche");
+      Alert.alert("Erreur", "Saisis d'abord le titre de la tâche");
       return;
     }
     setTasks((prevTasks) =>
@@ -39,55 +49,81 @@ const UpdateTaskScreen = () => {
   };
 
   return (
-    <View style={styles.container}>
-      {/* Preview */}
-      <View style={{ marginBottom: 30 }}>
-        <Text
-          style={{
-            fontFamily: fonts.medium,
-            fontSize: 16,
-            color: Colors.textSecondary,
-          }}
-        >
-          Prévisualisation
-        </Text>
-        <TaskPreview title={titleTask} iconName={task.iconName} />
-      </View>
+    <KeyboardAvoidingView
+      behavior="padding"
+      keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 80}
+      style={styles.container}
+    >
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <View style={{ flex: 1 }}>
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={{
+              flexGrow: 1,
+              paddingTop: 20,
+              paddingBottom: 60,
+            }}
+          >
+            {/* Preview */}
+            <View style={{ marginBottom: 30 }}>
+              <Text
+                style={{
+                  fontFamily: fonts.medium,
+                  fontSize: 16,
+                  color: Colors.textSecondary,
+                }}
+              >
+                Prévisualisation
+              </Text>
+              <TaskPreview title={titleTask} iconName={task.iconName} />
+            </View>
 
-      {/* Titre de la tâche */}
-      <View style={{ marginBottom: 30 }}>
-        <Text
-          style={{
-            fontFamily: fonts.medium,
-            fontSize: 16,
-            color: Colors.textSecondary,
-          }}
-        >
-          Titre
-        </Text>
-        <CustomInput
-          value={titleTask}
-          onChangeText={(text) => {
-            setTitleTask(text);
-            setIsDisable(text.length > 0 ? false : true);
-          }}
-          placeholder="Ex: Je dois faire du sport"
-        />
-      </View>
+            {/* Titre de la tâche */}
+            <View style={{ marginBottom: 30 }}>
+              <Text
+                style={{
+                  fontFamily: fonts.medium,
+                  fontSize: 16,
+                  color: Colors.textSecondary,
+                }}
+              >
+                Titre
+              </Text>
+              <CustomInput
+                value={titleTask}
+                onChangeText={(text) => {
+                  setTitleTask(text);
+                  setIsDisable(text.length > 0 ? false : true);
+                }}
+                placeholder="Ex: Je dois faire du sport"
+              />
+            </View>
+          </ScrollView>
 
-      {/* Bouton de modification */}
-      <CustomBtn onPress={handleUpdateTask} disable={isDisable}>
-        <Text
-          style={{
-            fontFamily: fonts.bold,
-            fontSize: 16,
-            color: Colors.textWhite,
-          }}
-        >
-          Modifier
-        </Text>
-      </CustomBtn>
-    </View>
+          {/* Bouton de modification */}
+          <View
+            style={{
+              position: "absolute",
+              bottom: 20,
+              left: 0,
+              right: 0,
+            }}
+          >
+            <CustomBtn onPress={handleUpdateTask} disable={isDisable}>
+              <Text
+                style={{
+                  fontFamily: fonts.bold,
+                  fontSize: 16,
+                  color: Colors.textWhite,
+                }}
+              >
+                Modifier
+              </Text>
+            </CustomBtn>
+          </View>
+        </View>
+      </TouchableWithoutFeedback>
+    </KeyboardAvoidingView>
   );
 };
 
@@ -96,7 +132,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: Colors.bg,
     paddingHorizontal: 15,
-    paddingVertical: 20,
   },
 });
 

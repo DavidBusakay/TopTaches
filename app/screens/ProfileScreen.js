@@ -6,26 +6,23 @@ import usePoppinsFont from "@/hooks/usePoppinsFont";
 import { Ionicons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
+import dayjs from "dayjs";
 import { useEffect, useState } from "react";
 import {
+  Alert,
   Image,
   Keyboard,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
+  TouchableWithoutFeedback,
   View,
 } from "react-native";
 import { showMessage } from "react-native-flash-message";
 import IMGPROFIL from "../../assets/images/profile.png";
-
-// const displayTime = createAt
-//   ? dayjs(createAt).calendar(null, {
-//       sameDay: "[Aujourd'hui à] HH:mm",
-//       lastDay: "[Hier à] HH:mm",
-//       lastWeek: "dddd [dernier à] HH:mm",
-//       sameElse: "DD/MM/YYYY",
-//     })
-//   : "";
 
 const ProfileScreen = () => {
   const { fonts } = usePoppinsFont();
@@ -144,7 +141,7 @@ const ProfileScreen = () => {
     }
   };
 
-  const handleDeleteAccount = async () => {
+  const deleteAccount = async () => {
     try {
       await AsyncStorage.removeItem("user");
       showMessage({
@@ -169,185 +166,242 @@ const ProfileScreen = () => {
     }
   };
 
+  const handleDeleteAccount = () => {
+    Alert.alert(
+      "Suppression de compte",
+      "Veux-tu vraiment supprimer définitivement ton compte ?",
+      [
+        {
+          text: "Annuler",
+          style: "cancel",
+          onPress: () => {},
+        },
+        {
+          text: "Supprimer",
+          style: "destructive",
+          onPress: deleteAccount,
+        },
+      ]
+    );
+  };
+
+  const displayDateRegisterAt = user.register_at
+    ? dayjs(user.register_at).calendar(null, {
+        sameDay: "[aujourd'hui à] HH:mm",
+        lastDay: "[hier à] HH:mm",
+        sameElse: "[le] DD/MM/YYYY",
+      })
+    : "";
+
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <View style={styles.imageBox}>
-          <Image source={IMGPROFIL} style={{ width: 100, height: 100 }} />
-        </View>
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "center",
-            alignItems: "center",
-            gap: 10,
-          }}
-        >
-          <Text
-            style={{
-              fontFamily: fonts.bold,
-              fontSize: 18,
-              color: Colors.textPrimary,
-              textAlign: "center",
+    <KeyboardAvoidingView
+      behavior="padding"
+      keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 80}
+      style={styles.container}
+    >
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <View style={{ flex: 1 }}>
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={{
+              flexGrow: 1,
+              paddingTop: 20,
+              paddingBottom: 90,
             }}
-            numberOfLines={1}
           >
-            {user.name} {user.firstname}
-          </Text>
-          <TouchableOpacity
-            activeOpacity={0.9}
-            onPress={() => setEditMode(!editMode)}
-            style={styles.btnUpdate}
-          >
-            <Ionicons
-              name={editMode ? "sync" : "pencil"}
-              size={16}
-              color={Colors.textSecondary}
-            />
-          </TouchableOpacity>
-        </View>
-      </View>
-
-      <View>
-        {editMode ? (
-          <>
-            <View style={{ marginBottom: 20 }}>
-              <Text
+            <View style={styles.header}>
+              <View style={styles.imageBox}>
+                <Image source={IMGPROFIL} style={{ width: 100, height: 100 }} />
+              </View>
+              <View
                 style={{
-                  fontFamily: fonts.medium,
-                  fontSize: 16,
-                  color: Colors.textSecondary,
-                  marginBottom: 5,
+                  flexDirection: "row",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  gap: 10,
                 }}
               >
-                Nouveau nom
-              </Text>
-              <CustomInput
-                value={name}
-                onChangeText={(text) => setName(text)}
-                placeholder="Ton nouveau nom"
-              />
+                <Text
+                  style={{
+                    fontFamily: fonts.bold,
+                    fontSize: 18,
+                    color: Colors.textPrimary,
+                    textAlign: "center",
+                  }}
+                  numberOfLines={1}
+                >
+                  {user.name} {user.firstname}
+                </Text>
+                <TouchableOpacity
+                  activeOpacity={0.9}
+                  onPress={() => setEditMode(!editMode)}
+                  style={styles.btnUpdate}
+                >
+                  <Ionicons
+                    name={editMode ? "sync" : "pencil"}
+                    size={16}
+                    color={Colors.textSecondary}
+                  />
+                </TouchableOpacity>
+              </View>
             </View>
 
-            <View style={{ marginBottom: 20 }}>
-              <Text
-                style={{
-                  fontFamily: fonts.medium,
-                  fontSize: 16,
-                  color: Colors.textSecondary,
-                  marginBottom: 5,
-                }}
-              >
-                Nouveau prénom
-              </Text>
-              <CustomInput
-                value={firstname}
-                onChangeText={(text) => setFirstname(text)}
-                placeholder="Ton nouveau prénom"
-              />
-            </View>
+            <View>
+              {editMode ? (
+                <>
+                  <View style={{ marginBottom: 20 }}>
+                    <Text
+                      style={{
+                        fontFamily: fonts.medium,
+                        fontSize: 16,
+                        color: Colors.textSecondary,
+                        marginBottom: 5,
+                      }}
+                    >
+                      Nouveau nom
+                    </Text>
+                    <CustomInput
+                      value={name}
+                      onChangeText={(text) => setName(text)}
+                      placeholder="Ton nouveau nom"
+                    />
+                  </View>
 
-            <View style={{ marginBottom: 20 }}>
-              <Text
-                style={{
-                  fontFamily: fonts.medium,
-                  fontSize: 16,
-                  color: Colors.textSecondary,
-                  marginBottom: 5,
-                }}
-              >
-                Nouveau mot de passe
-              </Text>
-              <PasswordInput
-                value={password}
-                onChangeText={(text) => setPassword(text)}
-                placeholder="Ton nouveau mot de passe"
-                onHide={() => setHidePassword(!hidePassword)}
-                isHide={hidePassword}
-              />
-            </View>
+                  <View style={{ marginBottom: 20 }}>
+                    <Text
+                      style={{
+                        fontFamily: fonts.medium,
+                        fontSize: 16,
+                        color: Colors.textSecondary,
+                        marginBottom: 5,
+                      }}
+                    >
+                      Nouveau prénom
+                    </Text>
+                    <CustomInput
+                      value={firstname}
+                      onChangeText={(text) => setFirstname(text)}
+                      placeholder="Ton nouveau prénom"
+                    />
+                  </View>
 
-            <View style={{ marginBottom: 20 }}>
-              <Text
+                  <View style={{ marginBottom: 20 }}>
+                    <Text
+                      style={{
+                        fontFamily: fonts.medium,
+                        fontSize: 16,
+                        color: Colors.textSecondary,
+                        marginBottom: 5,
+                      }}
+                    >
+                      Nouveau mot de passe
+                    </Text>
+                    <PasswordInput
+                      value={password}
+                      onChangeText={(text) => setPassword(text)}
+                      placeholder="Ton nouveau mot de passe"
+                      onHide={() => setHidePassword(!hidePassword)}
+                      isHide={hidePassword}
+                    />
+                  </View>
+
+                  <View style={{ marginBottom: 20 }}>
+                    <Text
+                      style={{
+                        fontFamily: fonts.medium,
+                        fontSize: 16,
+                        color: Colors.textSecondary,
+                        marginBottom: 5,
+                      }}
+                    >
+                      Confirme ton nouveau mot de passe
+                    </Text>
+                    <PasswordInput
+                      value={confirmPassword}
+                      onChangeText={(text) => setConfirmPassword(text)}
+                      placeholder="Confirme ton nouveau mot de passe"
+                      onHide={() =>
+                        setHideConfirmPassword(!hideConfirmPassword)
+                      }
+                      isHide={hideConfirmPassword}
+                    />
+                  </View>
+                </>
+              ) : (
+                <View>
+                  <Text
+                    style={{
+                      fontFamily: fonts.medium,
+                      fontSize: 16,
+                      color: Colors.textSecondary,
+                      marginBottom: 5,
+                    }}
+                  >
+                    Mot de passe
+                  </Text>
+                  <PasswordInput
+                    value={user.password}
+                    onChangeText={() => {}}
+                    placeholder="Mot de passe"
+                    onHide={() => setHidePassword(!hidePassword)}
+                    isHide={hidePassword}
+                  />
+                  <Text
+                    style={{
+                      fontFamily: fonts.medium,
+                      fontSize: 13,
+                      color: Colors.textSecondary,
+                      textAlign: "center",
+                      marginTop: 20,
+                    }}
+                  >
+                    Compte créé {displayDateRegisterAt}
+                  </Text>
+                </View>
+              )}
+            </View>
+          </ScrollView>
+
+          <View style={styles.wrapperBtn}>
+            {editMode ? (
+              <CustomBtn onPress={handleSave} disable={false}>
+                <Text
+                  style={{
+                    fontFamily: fonts.bold,
+                    fontSize: 16,
+                    color: Colors.textWhite,
+                  }}
+                >
+                  Enregistrer
+                </Text>
+              </CustomBtn>
+            ) : (
+              <TouchableOpacity
+                activeOpacity={0.9}
+                onPress={handleDeleteAccount}
                 style={{
-                  fontFamily: fonts.medium,
-                  fontSize: 16,
-                  color: Colors.textSecondary,
-                  marginBottom: 5,
+                  backgroundColor: Colors.red,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  borderRadius: 10,
+                  padding: 10,
                 }}
               >
-                Confirme ton nouveau mot de passe
-              </Text>
-              <PasswordInput
-                value={confirmPassword}
-                onChangeText={(text) => setConfirmPassword(text)}
-                placeholder="Confirme ton nouveau mot de passe"
-                onHide={() => setHideConfirmPassword(!hideConfirmPassword)}
-                isHide={hideConfirmPassword}
-              />
-            </View>
-          </>
-        ) : (
-          <View>
-            <Text
-              style={{
-                fontFamily: fonts.medium,
-                fontSize: 16,
-                color: Colors.textSecondary,
-                marginBottom: 5,
-              }}
-            >
-              Mot de passe
-            </Text>
-            <PasswordInput
-              value={user.password}
-              onChangeText={() => {}}
-              placeholder="Mot de passe"
-              onHide={() => setHidePassword(!hidePassword)}
-              isHide={hidePassword}
-            />
+                <Text
+                  style={{
+                    fontFamily: fonts.bold,
+                    fontSize: 16,
+                    color: Colors.textWhite,
+                  }}
+                >
+                  Supprimer mon compte
+                </Text>
+              </TouchableOpacity>
+            )}
           </View>
-        )}
-      </View>
-
-      <View style={styles.wrapperBtn}>
-        {editMode ? (
-          <CustomBtn onPress={handleSave} disable={false}>
-            <Text
-              style={{
-                fontFamily: fonts.bold,
-                fontSize: 16,
-                color: Colors.textWhite,
-              }}
-            >
-              Enregistrer
-            </Text>
-          </CustomBtn>
-        ) : (
-          <TouchableOpacity
-            activeOpacity={0.9}
-            onPress={handleDeleteAccount}
-            style={{
-              backgroundColor: Colors.red,
-              justifyContent: "center",
-              alignItems: "center",
-              borderRadius: 10,
-              padding: 10,
-            }}
-          >
-            <Text
-              style={{
-                fontFamily: fonts.bold,
-                fontSize: 16,
-                color: Colors.textWhite,
-              }}
-            >
-              Supprimer mon compte
-            </Text>
-          </TouchableOpacity>
-        )}
-      </View>
-    </View>
+        </View>
+      </TouchableWithoutFeedback>
+    </KeyboardAvoidingView>
   );
 };
 
@@ -355,7 +409,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: Colors.bg,
-    padding: 15,
+    paddingHorizontal: 15,
   },
   header: {
     paddingBottom: 20,
@@ -374,7 +428,6 @@ const styles = StyleSheet.create({
     bottom: 20,
     left: 0,
     right: 0,
-    padding: 15,
   },
   btnUpdate: {
     backgroundColor: Colors.whiteGray,

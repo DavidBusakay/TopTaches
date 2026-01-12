@@ -44,18 +44,6 @@ const HomeNavigator = ({ navigation }) => {
               <Ionicons name="menu" size={25} color={Colors.textWhite} />
             </TouchableOpacity>
           ),
-          headerRight: () => (
-            <TouchableOpacity
-              activeOpacity={0.9}
-              onPress={() => {}}
-              style={{
-                borderRadius: 50,
-                padding: 3,
-              }}
-            >
-              <Ionicons name="filter" size={25} color={Colors.textWhite} />
-            </TouchableOpacity>
-          ),
         }}
       />
       <Stack.Screen
