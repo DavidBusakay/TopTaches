@@ -206,7 +206,7 @@ const UpdateTaskScreen = () => {
                   Keyboard.dismiss();
                   setShowDatePicker(true);
                 }}
-                iconName="alarm"
+                iconName="calendar"
               />
               <InputDateTime
                 offset={dayjs(time).format("HH:mm")}
@@ -214,28 +214,22 @@ const UpdateTaskScreen = () => {
                   Keyboard.dismiss();
                   setShowTimePicker(true);
                 }}
-                iconName="alarm"
+                iconName="time"
               />
               {showDatePicker && (
                 <DateTimePicker
                   value={date}
                   mode="date"
-                  design="material"
-                  display="calendar"
                   onChange={onChangeDatePicker}
                   minimumDate={new Date()}
                   maximumDate={new Date(2030, 12, 31)}
-                  title="Sélectionne une date pour la tâche"
                 />
               )}
               {showTimePicker && (
                 <DateTimePicker
                   value={time}
                   mode="time"
-                  design="material"
-                  display="clock"
                   onChange={onChangeTimePicker}
-                  title="Sélectionne une date pour la tâche"
                 />
               )}
             </View>

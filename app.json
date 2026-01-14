@@ -13,8 +13,8 @@
     },
     "android": {
       "adaptiveIcon": {
-        "backgroundColor": "#3d6d4d",
-        "foregroundImage": "./assets/images/toptaches-icon.png"
+        "backgroundColor": "#ffffff",
+        "foregroundImage": "./assets/images/toptaches-splash-icon.png"
       },
       "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false,

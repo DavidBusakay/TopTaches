@@ -35,19 +35,20 @@ const AddTaskScreen = () => {
   const [titleTask, setTitleTask] = useState("");
   const [categories, setCategories] = useState([
     { id: "1", name: "Sport", iconName: "fitness", selected: true },
-    { id: "2", name: "Etude", iconName: "book", selected: false },
-    { id: "3", name: "Travail", iconName: "briefcase", selected: false },
-    { id: "4", name: "Amis", iconName: "people", selected: false },
-    { id: "5", name: "Famille", iconName: "heart", selected: false },
+    { id: "2", name: "Bien-être", iconName: "heart", selected: false },
+    { id: "3", name: "Etude", iconName: "book", selected: false },
+    { id: "4", name: "Travail", iconName: "briefcase", selected: false },
+    { id: "5", name: "Amis & Famille", iconName: "people", selected: false },
     { id: "6", name: "Nourriture", iconName: "fast-food", selected: false },
-    { id: "7", name: "Détente", iconName: "leaf", selected: false },
+    { id: "7", name: "Shopping", iconName: "cart", selected: false },
+    { id: "8", name: "Détente", iconName: "leaf", selected: false },
     {
-      id: "8",
+      id: "9",
       name: "Divertissement",
       iconName: "game-controller",
       selected: false,
     },
-    { id: "9", name: "Autres", iconName: "apps", selected: false },
+    { id: "10", name: "Autres", iconName: "apps", selected: false },
   ]);
   const [date, setDate] = useState(new Date());
   const [time, setTime] = useState(new Date());
@@ -266,7 +267,7 @@ const AddTaskScreen = () => {
                   Keyboard.dismiss();
                   setShowDatePicker(true);
                 }}
-                iconName="alarm"
+                iconName="calendar"
               />
               <InputDateTime
                 offset={dayjs(time).format("HH:mm")}
@@ -274,28 +275,22 @@ const AddTaskScreen = () => {
                   Keyboard.dismiss();
                   setShowTimePicker(true);
                 }}
-                iconName="alarm"
+                iconName="time"
               />
               {showDatePicker && (
                 <DateTimePicker
                   value={date}
                   mode="date"
-                  design="material"
-                  display="calendar"
                   onChange={onChangeDatePicker}
                   minimumDate={new Date()}
                   maximumDate={new Date(2030, 12, 31)}
-                  title="Sélectionne une date pour la tâche"
                 />
               )}
               {showTimePicker && (
                 <DateTimePicker
                   value={time}
                   mode="time"
-                  design="material"
-                  display="clock"
                   onChange={onChangeTimePicker}
-                  title="Sélectionne une heure pour la tâche"
                 />
               )}
             </View>
