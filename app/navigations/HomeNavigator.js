@@ -22,7 +22,7 @@ const HomeNavigator = ({ navigation }) => {
         },
         headerTintColor: Colors.textWhite,
         headerTitleStyle: {
-          fontFamily: fonts.medium,
+          fontFamily: fonts.bold,
         },
       }}
     >

@@ -1,4 +1,3 @@
-import Colors from "@/constants/Colors";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useEffect, useState } from "react";
 import { StatusBar } from "react-native";
@@ -18,7 +17,7 @@ const RootLayout = () => {
       } finally {
         setAppReady(true);
       }
-    }
+    };
     checkUser();
   }, []);
 
@@ -26,7 +25,11 @@ const RootLayout = () => {
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <StatusBar barStyle={"light-content"} backgroundColor={Colors.primary} />
+      <StatusBar
+        barStyle="light-content"
+        backgroundColor="transparent"
+        translucent={true}
+      />
       <AppNavigator initialRouteName={initialRoute} />
       <FlashMessage position="bottom" />
     </GestureHandlerRootView>

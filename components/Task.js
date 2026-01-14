@@ -5,6 +5,7 @@ import dayjs from "dayjs";
 import "dayjs/locale/fr";
 import calendar from "dayjs/plugin/calendar";
 import { Checkbox } from "expo-checkbox";
+import { useRef } from "react";
 import {
   StyleSheet,
   Text,
@@ -20,14 +21,17 @@ dayjs.locale("fr");
 const Task = ({
   title,
   iconName,
-  createAt,
   completed,
+  isModified,
+  createAt,
   onToggle,
   onDelete,
   onUpdate,
 }) => {
+  const swipeableRef = useRef();
   const { fonts } = usePoppinsFont();
 
+  
   const renderRightActions = (progression, drag) => {
     return (
       <TouchableOpacity
@@ -45,7 +49,7 @@ const Task = ({
     );
   };
 
-  const renderLeftActions = (progression, drag) => {
+  const renderLeftActions = (progress, dragX) => {
     return (
       <TouchableOpacity
         activeOpacity={0.9}
@@ -68,6 +72,7 @@ const Task = ({
 
   return (
     <ReanimatedSwipeable
+      ref={swipeableRef}
       friction={3}
       rightThreshold={40}
       leftThreshold={40}
@@ -79,9 +84,11 @@ const Task = ({
         if (direction === "right" && !completed) {
           Vibration.vibrate(50);
           onUpdate();
+          swipeableRef.current?.close();
         } else if (direction === "left") {
           Vibration.vibrate(50);
           onDelete();
+          swipeableRef.current?.close();
         }
       }}
       containerStyle={{
@@ -122,7 +129,7 @@ const Task = ({
                 color: Colors.textSecondary,
               }}
             >
-              {displayTime}
+              {displayTime} {isModified && "- Modifié"}
             </Text>
           </View>
           <Checkbox

@@ -4,7 +4,10 @@ import TaskPreview from "@/components/TaskPreview";
 import Colors from "@/constants/Colors";
 import updateTask from "@/functions/updateTask";
 import usePoppinsFont from "@/hooks/usePoppinsFont";
+import { Ionicons } from "@expo/vector-icons";
+import DateTimePicker from "@react-native-community/datetimepicker";
 import { useNavigation, useRoute } from "@react-navigation/native";
+import dayjs from "dayjs";
 import { useState } from "react";
 import {
   Alert,
@@ -14,6 +17,7 @@ import {
   ScrollView,
   StyleSheet,
   Text,
+  TouchableOpacity,
   TouchableWithoutFeedback,
   View,
 } from "react-native";
@@ -26,7 +30,16 @@ const UpdateTaskScreen = () => {
   const { task, setTasks } = route.params || {};
 
   const [titleTask, setTitleTask] = useState(task ? task.title : "");
+  const [date, setDate] = useState(new Date(task?.createdAt));
+  const [showDateTimePicker, setShowDateTimePicker] = useState(false);
   const [isDisable, setIsDisable] = useState(false);
+
+  const onChangeDatePicker = (event, selectedDate) => {
+    if (event.type === "set" && selectedDate) {
+      setDate(selectedDate);
+    }
+    setShowDateTimePicker(false);
+  };
 
   const handleUpdateTask = () => {
     if (titleTask.trim().length === 0) {
@@ -34,7 +47,11 @@ const UpdateTaskScreen = () => {
       return;
     }
     setTasks((prevTasks) =>
-      updateTask(prevTasks, task.id, { title: titleTask })
+      updateTask(prevTasks, task.id, {
+        title: titleTask,
+        createdAt: date.toISOString(),
+        isModified: true,
+      })
     );
     showMessage({
       message: "Modification",
@@ -98,6 +115,53 @@ const UpdateTaskScreen = () => {
                 placeholder="Ex: Je dois faire du sport"
               />
             </View>
+
+            {/* Programmation */}
+            <View style={{ marginBottom: 30 }}>
+              <Text
+                style={{
+                  fontFamily: fonts.medium,
+                  fontSize: 16,
+                  color: Colors.textSecondary,
+                  marginBottom: 10,
+                }}
+              >
+                Programmation
+              </Text>
+              <TouchableOpacity
+                activeOpacity={0.9}
+                onPress={() => setShowDateTimePicker(true)}
+                style={styles.wrapperDate}
+              >
+                <Text
+                  style={{
+                    fontFamily: fonts.medium,
+                    fontSize: 16,
+                    color: Colors.textPrimary,
+                  }}
+                >
+                  {dayjs(date).format("DD/MM/YYYY")}
+                </Text>
+                <Ionicons
+                  name="chevron-down"
+                  size={20}
+                  color={Colors.textSecondary}
+                />
+              </TouchableOpacity>
+              {showDateTimePicker && (
+                <DateTimePicker
+                  value={date}
+                  mode="date"
+                  design="material"
+                  display={Platform.OS === "ios" ? "spinner" : "default"}
+                  onChange={onChangeDatePicker}
+                  minimumDate={new Date()}
+                  maximumDate={new Date(2030, 12, 31)}
+                  title="Sélectionne une date pour la tâche"
+                  timeZoneName="Africa/Kinshasa"
+                />
+              )}
+            </View>
           </ScrollView>
 
           {/* Bouton de modification */}
@@ -132,6 +196,14 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: Colors.bg,
     paddingHorizontal: 15,
+  },
+  wrapperDate: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    backgroundColor: Colors.whiteGray,
+    borderRadius: 10,
+    padding: 20,
   },
 });
 

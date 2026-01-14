@@ -6,8 +6,11 @@ import Colors from "@/constants/Colors";
 import STORAGE_KEY from "@/constants/Storage";
 import toggleCategory from "@/functions/toggleCategory";
 import usePoppinsFont from "@/hooks/usePoppinsFont";
+import { Ionicons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import DateTimePicker from "@react-native-community/datetimepicker";
 import { useNavigation, useRoute } from "@react-navigation/native";
+import dayjs from "dayjs";
 import { useState } from "react";
 import {
   Alert,
@@ -17,7 +20,9 @@ import {
   Platform,
   ScrollView,
   StyleSheet,
+  Switch,
   Text,
+  TouchableOpacity,
   TouchableWithoutFeedback,
   View,
 } from "react-native";
@@ -46,7 +51,17 @@ const AddTaskScreen = () => {
     },
     { id: "9", name: "Autres", iconName: "apps", selected: false },
   ]);
+  const [date, setDate] = useState(new Date());
+  const [showDateTimePicker, setShowDateTimePicker] = useState(false);
+  const [reminder, setReminder] = useState(true);
   const [isDisable, setIsDisable] = useState(true);
+
+  const onChangeDatePicker = (event, selectedDate) => {
+    if (event.type === "set" && selectedDate) {
+      setDate(selectedDate);
+    }
+    setShowDateTimePicker(false);
+  };
 
   const addTask = async () => {
     if (titleTask.trim().length === 0) {
@@ -62,7 +77,9 @@ const AddTaskScreen = () => {
       iconName: selectedCategory ? selectedCategory.iconName : "apps",
       category: selectedCategory ? selectedCategory.name : "Autres",
       completed: false,
-      createdAt: new Date().toISOString(),
+      isModified: false,
+      reminder: reminder,
+      createdAt: date.toISOString(),
     };
     setTasks((prevTasks) => [newTask, ...prevTasks]);
 
@@ -173,17 +190,83 @@ const AddTaskScreen = () => {
                 }}
               />
             </View>
+
+            {/* Programmation */}
+            <View style={{ marginBottom: 30 }}>
+              <Text
+                style={{
+                  fontFamily: fonts.medium,
+                  fontSize: 16,
+                  color: Colors.textSecondary,
+                  marginBottom: 10,
+                }}
+              >
+                Programmation
+              </Text>
+              <TouchableOpacity
+                activeOpacity={0.9}
+                onPress={() => setShowDateTimePicker(true)}
+                style={styles.wrapperDate}
+              >
+                <Text
+                  style={{
+                    fontFamily: fonts.medium,
+                    fontSize: 16,
+                    color: Colors.textPrimary,
+                  }}
+                >
+                  {dayjs(date).format("DD/MM/YYYY")}
+                </Text>
+                <Ionicons
+                  name="chevron-down"
+                  size={20}
+                  color={Colors.textSecondary}
+                />
+              </TouchableOpacity>
+              {showDateTimePicker && (
+                <DateTimePicker
+                  value={date}
+                  mode="date"
+                  design="material"
+                  display={Platform.OS === "ios" ? "spinner" : "default"}
+                  onChange={onChangeDatePicker}
+                  minimumDate={new Date()}
+                  maximumDate={new Date(2030, 12, 31)}
+                  title="Sélectionne une date pour la tâche"
+                  timeZoneName="Africa/Kinshasa"
+                />
+              )}
+            </View>
+
+            {/* Rappels */}
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+                alignItems: "center",
+                marginBottom: 30,
+              }}
+            >
+              <Text
+                style={{
+                  fontFamily: fonts.medium,
+                  fontSize: 16,
+                  color: Colors.textSecondary,
+                }}
+              >
+                Me rappeler
+              </Text>
+              <Switch
+                value={reminder}
+                onChange={() => setReminder(!reminder)}
+                thumbColor={Colors.primary}
+                accessibilityLabel="Me rappeler"
+              />
+            </View>
           </ScrollView>
 
           {/* Bouton d'ajout */}
-          <View
-            style={{
-              position: "absolute",
-              bottom: 20,
-              left: 0,
-              right: 0,
-            }}
-          >
+          <View style={styles.wrapperBtn}>
             <CustomBtn onPress={addTask} disable={isDisable}>
               <Text
                 style={{
@@ -207,6 +290,20 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: Colors.bg,
     paddingHorizontal: 15,
+  },
+  wrapperBtn: {
+    position: "absolute",
+    bottom: 20,
+    left: 0,
+    right: 0,
+  },
+  wrapperDate: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    backgroundColor: Colors.whiteGray,
+    borderRadius: 10,
+    padding: 20,
   },
 });
 

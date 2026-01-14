@@ -10,8 +10,7 @@ const CustomBtn = ({ onPress, disable, ...rest }) => {
       style={{
         justifyContent: "center",
         alignItems: "center",
-        backgroundColor: Colors.primary,
-        opacity: disable ? 0.5 : 1,
+        backgroundColor: disable ? Colors.textSecondary : Colors.primary,
         borderRadius: 10,
         padding: 10,
       }}

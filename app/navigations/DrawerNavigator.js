@@ -20,7 +20,7 @@ const DrawerNavigator = () => {
         },
         headerTintColor: "#fff",
         headerTitleStyle: {
-          fontFamily: fonts.medium,
+          fontFamily: fonts.bold,
         },
         drawerActiveTintColor: Colors.primary,
         drawerType: "slide",
@@ -38,7 +38,7 @@ const DrawerNavigator = () => {
     >
       <Drawer.Screen
         name="(Home)"
-        component={HomeNavigator}
+        component={(props) => <HomeNavigator {...props} />}
         options={{
           title: "Accueil",
           drawerIcon: ({ focused, color }) => (

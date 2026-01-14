@@ -104,7 +104,7 @@ const HomeScreen = () => {
         >
           <Text
             style={{
-              fontFamily: fonts.medium,
+              fontFamily: fonts.bold,
               fontSize: 17,
               color: Colors.textWhite,
             }}
@@ -223,6 +223,7 @@ const HomeScreen = () => {
               title={item.title}
               iconName={item.iconName}
               completed={item.completed}
+              isModified={item.isModified}
               createAt={item.createdAt}
               onToggle={() => toggleTask(item.id, setTasks)}
               onDelete={() => deleteTask(item.id, setTasks)}
