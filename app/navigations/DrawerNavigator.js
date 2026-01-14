@@ -4,6 +4,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import ProfileScreen from "../screens/ProfileScreen";
 import HomeNavigator from "./HomeNavigator";
+import CustomDrawerContent from "@/components/CustomDrawerContent";
 
 const Drawer = createDrawerNavigator();
 
@@ -11,6 +12,7 @@ const DrawerNavigator = () => {
   const { fonts } = usePoppinsFont();
   return (
     <Drawer.Navigator
+      drawerContent={(props) => <CustomDrawerContent {...props} />}
       screenOptions={{
         headerStyle: {
           backgroundColor: Colors.primary,

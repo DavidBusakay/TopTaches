@@ -13,7 +13,6 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import dayjs from "dayjs";
 import { useState } from "react";
 import {
-  Alert,
   FlatList,
   Keyboard,
   KeyboardAvoidingView,
@@ -64,8 +63,17 @@ const AddTaskScreen = () => {
   };
 
   const addTask = async () => {
+    Keyboard.dismiss();
+
     if (titleTask.trim().length === 0) {
-      Alert.alert("Erreur", "Saisis d'abord le titre de la tâche");
+      showMessage({
+        message: "Aucun titre de tâche",
+        description: "Saisis d'abord le titre de la tâche.",
+        type: "danger",
+        icon: "danger",
+        backgroundColor: Colors.red,
+        duration: 3000,
+      });
       return;
     }
 
@@ -103,9 +111,16 @@ const AddTaskScreen = () => {
       });
       setTitleTask("");
       navigation.goBack();
-    } catch (e) {
-      console.log(e);
-      Alert.alert("Erreur", "Une erreur s'est produite lors de la sauvegarde.");
+    } catch (_) {
+      showMessage({
+        message: "Erreur d'ajout",
+        description:
+          "Une erreur s'est produite lors de l'ajout de cette tâche.",
+        type: "danger",
+        icon: "danger",
+        backgroundColor: Colors.red,
+        duration: 3000,
+      });
       return;
     }
   };

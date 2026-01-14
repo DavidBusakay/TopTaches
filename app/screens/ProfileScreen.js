@@ -67,7 +67,7 @@ const ProfileScreen = () => {
         type: "danger",
         icon: "danger",
         backgroundColor: Colors.red,
-        duration: 5000,
+        duration: 3000,
       });
       return;
     }
@@ -79,7 +79,7 @@ const ProfileScreen = () => {
         type: "danger",
         icon: "danger",
         backgroundColor: Colors.red,
-        duration: 7000,
+        duration: 3000,
       });
       return;
     }
@@ -91,7 +91,7 @@ const ProfileScreen = () => {
         type: "danger",
         icon: "danger",
         backgroundColor: Colors.red,
-        duration: 7000,
+        duration: 3000,
       });
       return;
     }
@@ -112,7 +112,7 @@ const ProfileScreen = () => {
         type: "success",
         icon: "success",
         backgroundColor: Colors.primary,
-        duration: 7000,
+        duration: 3000,
       });
       setEditMode(false);
       setName("");
@@ -129,7 +129,7 @@ const ProfileScreen = () => {
         type: "danger",
         icon: "danger",
         backgroundColor: Colors.red,
-        duration: 7000,
+        duration: 3000,
       });
       setEditMode(false);
       setName("");
@@ -161,7 +161,7 @@ const ProfileScreen = () => {
         type: "danger",
         icon: "danger",
         backgroundColor: Colors.red,
-        duration: 7000,
+        duration: 3000,
       });
     }
   };
@@ -189,6 +189,7 @@ const ProfileScreen = () => {
     ? dayjs(user.register_at).calendar(null, {
         sameDay: "[aujourd'hui à] HH:mm",
         lastDay: "[hier à] HH:mm",
+        lastWeek: "dddd [dernier à] HH:mm",
         sameElse: "[le] DD/MM/YYYY",
       })
     : "";

@@ -11,7 +11,6 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import dayjs from "dayjs";
 import { useState } from "react";
 import {
-  Alert,
   Keyboard,
   KeyboardAvoidingView,
   Platform,
@@ -45,8 +44,17 @@ const UpdateTaskScreen = () => {
   };
 
   const handleUpdateTask = () => {
+    Keyboard.dismiss();
+
     if (titleTask.trim().length === 0) {
-      Alert.alert("Erreur", "Saisis d'abord le titre de la tâche");
+      showMessage({
+        message: "Aucun titre de tâche",
+        description: "Saisis d'abord le titre de la tâche.",
+        type: "danger",
+        icon: "danger",
+        backgroundColor: Colors.red,
+        duration: 3000,
+      });
       return;
     }
 

@@ -16,6 +16,7 @@ import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import {
   FlatList,
   Modal,
+  Pressable,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -79,7 +80,7 @@ const HomeScreen = () => {
   const refRBSheet = useRef();
 
   const [selectedDate, setSelectedDate] = useState(
-    dayjs().format("YYYY/MM/DD")
+    dayjs().format("YYYY-MM-DD")
   );
   const [isModalVisible, setModalVisible] = useState(false);
   const [tasks, setTasks] = useState([]);
@@ -286,7 +287,10 @@ const HomeScreen = () => {
         animationType="fade"
         onRequestClose={() => setModalVisible(false)}
       >
-        <View style={styles.modalOverlay}>
+        <Pressable
+          onPress={() => setModalVisible(false)}
+          style={styles.modalOverlay}
+        >
           <View style={styles.calendarCard}>
             <DatePicker
               mode="monthYear"
@@ -295,10 +299,8 @@ const HomeScreen = () => {
               selectorEndingYear={2100}
               selected={dayjs(selectedDate).format("YYYY/MM/DD")}
               onMonthYearChange={(dateString) => {
-                const formatedForDayjs = dateString.replace(" ", "/") + "/01";
-                const newDate = dayjs(formatedForDayjs, "YYYY/MM/DD").format(
-                  "YYYY-MM-DD"
-                );
+                const formatedForDayjs = dateString.replace(" ", "-") + "-01";
+                const newDate = dayjs(formatedForDayjs).format("YYYY-MM-DD");
                 setSelectedDate(newDate);
                 setModalVisible(false);
               }}
@@ -313,7 +315,7 @@ const HomeScreen = () => {
               }}
             />
           </View>
-        </View>
+        </Pressable>
       </Modal>
 
       {/* BOTTOM SHEET */}
@@ -365,7 +367,7 @@ const styles = StyleSheet.create({
   calendarCard: {
     backgroundColor: "#fff",
     borderRadius: 20,
-    padding: 15,
+    padding: 10,
     elevation: 10,
     margin: 10,
   },

@@ -41,7 +41,7 @@ const OnboardingSreen = () => {
         type: "danger",
         icon: "danger",
         backgroundColor: Colors.red,
-        duration: 5000,
+        duration: 3000,
       });
       return;
     }
@@ -53,7 +53,7 @@ const OnboardingSreen = () => {
         type: "danger",
         icon: "danger",
         backgroundColor: Colors.red,
-        duration: 5000,
+        duration: 3000,
       });
       return;
     }
@@ -65,7 +65,7 @@ const OnboardingSreen = () => {
         type: "danger",
         icon: "danger",
         backgroundColor: Colors.red,
-        duration: 5000,
+        duration: 3000,
       });
       return;
     }
@@ -86,7 +86,7 @@ const OnboardingSreen = () => {
         type: "success",
         icon: "success",
         backgroundColor: Colors.primary,
-        duration: 5000,
+        duration: 3000,
       });
       setName("");
       setFirstname("");
@@ -100,7 +100,7 @@ const OnboardingSreen = () => {
         type: "danger",
         icon: "danger",
         backgroundColor: Colors.red,
-        duration: 5000,
+        duration: 3000,
       });
     }
   };
