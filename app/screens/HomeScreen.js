@@ -149,7 +149,6 @@ const HomeScreen = () => {
             "Une erreur s'est produite lors du chargement des tâches.",
           type: "danger",
           icon: "danger",
-          backgroundColor: Colors.red,
           duration: 3000,
         });
       }
@@ -168,7 +167,6 @@ const HomeScreen = () => {
             "Une erreur s'est produite lors de la sauvegarde des tâches.",
           type: "danger",
           icon: "danger",
-          backgroundColor: Colors.red,
           duration: 3000,
         });
       }
@@ -226,8 +224,8 @@ const HomeScreen = () => {
               isModified={item.isModified}
               isReminded={item.reminder}
               createAt={item.createdAt}
-              onToggle={() => toggleTask(item.id, setTasks)}
-              onDelete={() => deleteTask(item.id, setTasks)}
+              onToggle={() => toggleTask(item.id, tasks, setTasks)}
+              onDelete={() => deleteTask(item.id, tasks, setTasks)}
               onUpdate={() => {
                 navigation.navigate("UpdateTask", {
                   task: item,

@@ -36,20 +36,31 @@ export const requestNotificationPermissions = async () => {
 
 export const scheduleTaskNotification = async (task) => {
   if (!task?.createdAt || !task?.title) return null;
+
   const triggerDate = new Date(task.createdAt);
-  if (isNaN(triggerDate.getTime()) || triggerDate <= new Date()) return null;
 
   try {
     const id = await Notifications.scheduleNotificationAsync({
       content: {
         title: "Rappel de tâche 🚀",
         body: `Il est temps de : ${task.title}`,
+        sound: true,
       },
-      trigger: triggerDate,
+      trigger: {
+        type: "date",
+        date: triggerDate,
+      },
     });
     return id;
-  } catch (e) {
-    console.error("Notification scheduling error:", e);
+  } catch (_) {
     return null;
+  }
+};
+
+export const cancelTaskNotification = async (notificationId) => {
+  if (notificationId) {
+    try {
+      await Notifications.cancelScheduledNotificationAsync(notificationId);
+    } catch (_) {}
   }
 };

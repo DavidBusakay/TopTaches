@@ -1,12 +1,12 @@
 import Category from "@/components/Category";
 import CustomBtn from "@/components/CustomBtn";
 import CustomInput from "@/components/CustomInput";
+import InputDateTime from "@/components/InputDateTime";
 import TaskPreview from "@/components/TaskPreview";
 import Colors from "@/constants/Colors";
 import toggleCategory from "@/functions/toggleCategory";
 import usePoppinsFont from "@/hooks/usePoppinsFont";
 import { scheduleTaskNotification } from "@/services/notification";
-import { Ionicons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { useNavigation, useRoute } from "@react-navigation/native";
@@ -21,7 +21,6 @@ import {
   StyleSheet,
   Switch,
   Text,
-  TouchableOpacity,
   TouchableWithoutFeedback,
   View,
 } from "react-native";
@@ -51,7 +50,9 @@ const AddTaskScreen = () => {
     { id: "9", name: "Autres", iconName: "apps", selected: false },
   ]);
   const [date, setDate] = useState(new Date());
-  const [showDateTimePicker, setShowDateTimePicker] = useState(false);
+  const [time, setTime] = useState(new Date());
+  const [showDatePicker, setShowDatePicker] = useState(false);
+  const [showTimePicker, setShowTimePicker] = useState(false);
   const [reminder, setReminder] = useState(true);
   const [isDisable, setIsDisable] = useState(true);
 
@@ -59,11 +60,27 @@ const AddTaskScreen = () => {
     if (event.type === "set" && selectedDate) {
       setDate(selectedDate);
     }
-    setShowDateTimePicker(false);
+    setShowDatePicker(false);
+  };
+
+  const onChangeTimePicker = (event, selectedTime) => {
+    if (event.type === "set" && selectedTime) {
+      setTime(selectedTime);
+    }
+    setShowTimePicker(false);
   };
 
   const addTask = async () => {
     Keyboard.dismiss();
+
+    const targetDate = new Date(
+      date.getFullYear(),
+      date.getMonth(),
+      date.getDate(),
+      time.getHours(),
+      time.getMinutes(),
+      0
+    );
 
     if (titleTask.trim().length === 0) {
       showMessage({
@@ -71,7 +88,17 @@ const AddTaskScreen = () => {
         description: "Saisis d'abord le titre de la tâche.",
         type: "danger",
         icon: "danger",
-        backgroundColor: Colors.red,
+        duration: 3000,
+      });
+      return;
+    }
+
+    if (targetDate <= new Date()) {
+      showMessage({
+        message: "Attention à l'heure",
+        description: "Choisis une date dans le futur.",
+        type: "warning",
+        icon: "warning",
         duration: 3000,
       });
       return;
@@ -87,7 +114,7 @@ const AddTaskScreen = () => {
       completed: false,
       isModified: false,
       reminder: reminder,
-      createdAt: date.toISOString(),
+      createdAt: targetDate.toISOString(),
       notificationId: null,
     };
 
@@ -106,7 +133,6 @@ const AddTaskScreen = () => {
         description: "La tâche a été ajoutée avec succès !",
         type: "success",
         icon: "success",
-        backgroundColor: Colors.primary,
         duration: 3000,
       });
       setTitleTask("");
@@ -118,7 +144,6 @@ const AddTaskScreen = () => {
           "Une erreur s'est produite lors de l'ajout de cette tâche.",
         type: "danger",
         icon: "danger",
-        backgroundColor: Colors.red,
         duration: 3000,
       });
       return;
@@ -213,8 +238,8 @@ const AddTaskScreen = () => {
               />
             </View>
 
-            {/* Programmation */}
-            <View style={{ marginBottom: 30 }}>
+            {/* Date et heure */}
+            <View style={{ marginBottom: 20 }}>
               <Text
                 style={{
                   fontFamily: fonts.medium,
@@ -223,39 +248,44 @@ const AddTaskScreen = () => {
                   marginBottom: 10,
                 }}
               >
-                Programmation
+                Date et Heure
               </Text>
-              <TouchableOpacity
-                activeOpacity={0.9}
-                onPress={() => setShowDateTimePicker(true)}
-                style={styles.wrapperDate}
-              >
-                <Text
-                  style={{
-                    fontFamily: fonts.medium,
-                    fontSize: 16,
-                    color: Colors.textPrimary,
-                  }}
-                >
-                  {dayjs(date).format("DD/MM/YYYY")}
-                </Text>
-                <Ionicons
-                  name="chevron-down"
-                  size={20}
-                  color={Colors.textSecondary}
-                />
-              </TouchableOpacity>
-              {showDateTimePicker && (
+              <InputDateTime
+                offset={dayjs(date).format("DD/MM/YYYY")}
+                onPress={() => {
+                  Keyboard.dismiss();
+                  setShowDatePicker(true);
+                }}
+                iconName="alarm"
+              />
+              <InputDateTime
+                offset={dayjs(time).format("HH:mm")}
+                onPress={() => {
+                  Keyboard.dismiss();
+                  setShowTimePicker(true);
+                }}
+                iconName="alarm"
+              />
+              {showDatePicker && (
                 <DateTimePicker
                   value={date}
                   mode="date"
                   design="material"
-                  display={Platform.OS === "ios" ? "spinner" : "default"}
+                  display="calendar"
                   onChange={onChangeDatePicker}
                   minimumDate={new Date()}
                   maximumDate={new Date(2030, 12, 31)}
                   title="Sélectionne une date pour la tâche"
-                  timeZoneName="Africa/Kinshasa"
+                />
+              )}
+              {showTimePicker && (
+                <DateTimePicker
+                  value={time}
+                  mode="time"
+                  design="material"
+                  display="clock"
+                  onChange={onChangeTimePicker}
+                  title="Sélectionne une heure pour la tâche"
                 />
               )}
             </View>
@@ -318,14 +348,6 @@ const styles = StyleSheet.create({
     bottom: 20,
     left: 0,
     right: 0,
-  },
-  wrapperDate: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    backgroundColor: Colors.whiteGray,
-    borderRadius: 10,
-    padding: 20,
   },
 });
 

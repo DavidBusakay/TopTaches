@@ -40,7 +40,6 @@ const OnboardingSreen = () => {
           "Assurez-vous de bien remplir le nom, prénom et mot de passe.",
         type: "danger",
         icon: "danger",
-        backgroundColor: Colors.red,
         duration: 3000,
       });
       return;
@@ -52,7 +51,6 @@ const OnboardingSreen = () => {
         description: "Minimum 6 caractères (A-Z, 0-9 et caractères spéciaux).",
         type: "danger",
         icon: "danger",
-        backgroundColor: Colors.red,
         duration: 3000,
       });
       return;
@@ -64,7 +62,6 @@ const OnboardingSreen = () => {
         description: "Assure-toi de bien de confirmer ton mot de passe.",
         type: "danger",
         icon: "danger",
-        backgroundColor: Colors.red,
         duration: 3000,
       });
       return;
@@ -85,7 +82,6 @@ const OnboardingSreen = () => {
           "L'enregistrement a réussi. Tu peux consulter tes informations dans ton profil.",
         type: "success",
         icon: "success",
-        backgroundColor: Colors.primary,
         duration: 3000,
       });
       setName("");
@@ -99,7 +95,6 @@ const OnboardingSreen = () => {
           "Une erreur s'est produite lors de l'enregistrement. Rédemarre l'application et réessaye.",
         type: "danger",
         icon: "danger",
-        backgroundColor: Colors.red,
         duration: 3000,
       });
     }

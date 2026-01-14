@@ -1,11 +1,14 @@
 import CustomBtn from "@/components/CustomBtn";
 import CustomInput from "@/components/CustomInput";
+import InputDateTime from "@/components/InputDateTime";
 import TaskPreview from "@/components/TaskPreview";
 import Colors from "@/constants/Colors";
 import updateTask from "@/functions/updateTask";
 import usePoppinsFont from "@/hooks/usePoppinsFont";
-import { scheduleTaskNotification } from "@/services/notification";
-import { Ionicons } from "@expo/vector-icons";
+import {
+  cancelTaskNotification,
+  scheduleTaskNotification,
+} from "@/services/notification";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import dayjs from "dayjs";
@@ -18,7 +21,6 @@ import {
   StyleSheet,
   Switch,
   Text,
-  TouchableOpacity,
   TouchableWithoutFeedback,
   View,
 } from "react-native";
@@ -29,22 +31,48 @@ const UpdateTaskScreen = () => {
   const route = useRoute();
   const { fonts } = usePoppinsFont();
   const { task, setTasks } = route.params || {};
-  const [reminder, setReminder] = useState(task?.reminder ?? true);
 
   const [titleTask, setTitleTask] = useState(task ? task.title : "");
-  const [date, setDate] = useState(new Date(task?.createdAt));
-  const [showDateTimePicker, setShowDateTimePicker] = useState(false);
+  const [date, setDate] = useState(
+    task ? new Date(task.createdAt) : new Date()
+  );
+  const [time, setTime] = useState(
+    task ? new Date(task.createdAt) : new Date()
+  );
+  const [showDatePicker, setShowDatePicker] = useState(false);
+  const [showTimePicker, setShowTimePicker] = useState(false);
+  const [reminder, setReminder] = useState(task ? task.reminder : true);
   const [isDisable, setIsDisable] = useState(false);
 
   const onChangeDatePicker = (event, selectedDate) => {
     if (event.type === "set" && selectedDate) {
       setDate(selectedDate);
     }
-    setShowDateTimePicker(false);
+    setShowDatePicker(false);
   };
 
-  const handleUpdateTask = () => {
+  const onChangeTimePicker = (event, selectedTime) => {
+    if (event.type === "set" && selectedTime) {
+      setTime(selectedTime);
+    }
+    setShowTimePicker(false);
+  };
+
+  const handleUpdateTask = async () => {
     Keyboard.dismiss();
+
+    if (task.notificationId) {
+      await cancelTaskNotification(task.notificationId);
+    }
+
+    const targetDate = new Date(
+      date.getFullYear(),
+      date.getMonth(),
+      date.getDate(),
+      time.getHours(),
+      time.getMinutes(),
+      0
+    );
 
     if (titleTask.trim().length === 0) {
       showMessage({
@@ -52,41 +80,51 @@ const UpdateTaskScreen = () => {
         description: "Saisis d'abord le titre de la tâche.",
         type: "danger",
         icon: "danger",
-        backgroundColor: Colors.red,
         duration: 3000,
       });
       return;
     }
 
-    (async () => {
-      let notificationId = task.notificationId || null;
-      if (reminder) {
-        notificationId = await scheduleTaskNotification({
-          ...task,
-          title: titleTask,
-          createdAt: date.toISOString(),
-        });
-      }
-      setTasks((prevTasks) =>
-        updateTask(prevTasks, task.id, {
-          title: titleTask,
-          createdAt: date.toISOString(),
-          isModified: true,
-          reminder,
-          notificationId,
-        })
-      );
+    if (targetDate <= new Date()) {
       showMessage({
-        message: "Modification",
-        description: "La tâche a été modifiée avec succès !",
-        type: "success",
-        icon: "success",
-        backgroundColor: Colors.primary,
+        message: "Attention à l'heure",
+        description: "Choisis une date dans le futur.",
+        type: "warning",
+        icon: "warning",
         duration: 3000,
       });
-      setTitleTask("");
-      navigation.goBack();
-    })();
+      return;
+    }
+
+    let notificationId = null;
+
+    if (reminder) {
+      notificationId = await scheduleTaskNotification({
+        ...task,
+        title: titleTask,
+        createdAt: targetDate.toISOString(),
+      });
+    }
+
+    setTasks((prevTasks) =>
+      updateTask(prevTasks, task.id, {
+        title: titleTask,
+        createdAt: targetDate.toISOString(),
+        isModified: true,
+        reminder,
+        notificationId,
+      })
+    );
+
+    showMessage({
+      message: "Modification",
+      description: "La tâche a été modifiée avec succès !",
+      type: "success",
+      icon: "success",
+      duration: 3000,
+    });
+    setTitleTask("");
+    navigation.goBack();
   };
 
   return (
@@ -141,7 +179,7 @@ const UpdateTaskScreen = () => {
             </View>
 
             {/* Programmation */}
-            <View style={{ marginBottom: 30 }}>
+            <View style={{ marginBottom: 20 }}>
               <Text
                 style={{
                   fontFamily: fonts.medium,
@@ -152,37 +190,42 @@ const UpdateTaskScreen = () => {
               >
                 Programmation
               </Text>
-              <TouchableOpacity
-                activeOpacity={0.9}
-                onPress={() => setShowDateTimePicker(true)}
-                style={styles.wrapperDate}
-              >
-                <Text
-                  style={{
-                    fontFamily: fonts.medium,
-                    fontSize: 16,
-                    color: Colors.textPrimary,
-                  }}
-                >
-                  {dayjs(date).format("DD/MM/YYYY")}
-                </Text>
-                <Ionicons
-                  name="chevron-down"
-                  size={20}
-                  color={Colors.textSecondary}
-                />
-              </TouchableOpacity>
-              {showDateTimePicker && (
+              <InputDateTime
+                offset={dayjs(date).format("DD/MM/YYYY")}
+                onPress={() => {
+                  Keyboard.dismiss();
+                  setShowDatePicker(true);
+                }}
+                iconName="alarm"
+              />
+              <InputDateTime
+                offset={dayjs(time).format("HH:mm")}
+                onPress={() => {
+                  Keyboard.dismiss();
+                  setShowTimePicker(true);
+                }}
+                iconName="alarm"
+              />
+              {showDatePicker && (
                 <DateTimePicker
                   value={date}
                   mode="date"
                   design="material"
-                  display={Platform.OS === "ios" ? "spinner" : "default"}
+                  display="calendar"
                   onChange={onChangeDatePicker}
                   minimumDate={new Date()}
                   maximumDate={new Date(2030, 12, 31)}
                   title="Sélectionne une date pour la tâche"
-                  timeZoneName="Africa/Kinshasa"
+                />
+              )}
+              {showTimePicker && (
+                <DateTimePicker
+                  value={time}
+                  mode="time"
+                  design="material"
+                  display="clock"
+                  onChange={onChangeTimePicker}
+                  title="Sélectionne une date pour la tâche"
                 />
               )}
             </View>

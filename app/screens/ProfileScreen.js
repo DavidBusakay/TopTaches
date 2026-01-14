@@ -66,7 +66,6 @@ const ProfileScreen = () => {
           "Assurez-vous de bien remplir le nom, prénom, le nouveau mot de passe et sa confirmation.",
         type: "danger",
         icon: "danger",
-        backgroundColor: Colors.red,
         duration: 3000,
       });
       return;
@@ -78,7 +77,6 @@ const ProfileScreen = () => {
         description: "Minimum 6 caractères (A-Z, 0-9 et caractères spéciaux).",
         type: "danger",
         icon: "danger",
-        backgroundColor: Colors.red,
         duration: 3000,
       });
       return;
@@ -88,9 +86,8 @@ const ProfileScreen = () => {
       showMessage({
         message: "Les deux mots de passe ne correspondent pas.",
         description: "Assure-toi de bien de confirmer ton mot de passe.",
-        type: "danger",
-        icon: "danger",
-        backgroundColor: Colors.red,
+        type: "warning",
+        icon: "warning",
         duration: 3000,
       });
       return;
@@ -111,7 +108,6 @@ const ProfileScreen = () => {
         description: "Tu peux maintenant ajouter tes tâches.",
         type: "success",
         icon: "success",
-        backgroundColor: Colors.primary,
         duration: 3000,
       });
       setEditMode(false);
@@ -128,7 +124,6 @@ const ProfileScreen = () => {
           "Une erreur s'est produite lors de l'enregistrement. Rédemarre l'application et réessaye.",
         type: "danger",
         icon: "danger",
-        backgroundColor: Colors.red,
         duration: 3000,
       });
       setEditMode(false);
@@ -149,7 +144,6 @@ const ProfileScreen = () => {
         description: "Réinscris-toi pour gérer plus facilement tes tâches.",
         type: "success",
         icon: "success",
-        backgroundColor: Colors.primary,
         duration: 3000,
       });
       navigation.navigate("Onboarding");
@@ -160,7 +154,6 @@ const ProfileScreen = () => {
           "Une erreur s'est produite lors de la suppression de ton compte. Rédemarre l'application et réessaye.",
         type: "danger",
         icon: "danger",
-        backgroundColor: Colors.red,
         duration: 3000,
       });
     }
