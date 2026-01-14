@@ -57,17 +57,27 @@ const AddTaskScreen = () => {
   const [isDisable, setIsDisable] = useState(true);
 
   const onChangeDatePicker = (event, selectedDate) => {
-    if (event.type === "set" && selectedDate) {
+    setShowDatePicker(false);
+
+    if (event.type === "dismissed") {
+      return;
+    }
+
+    if (selectedDate) {
       setDate(selectedDate);
     }
-    setShowDatePicker(false);
   };
 
   const onChangeTimePicker = (event, selectedTime) => {
-    if (event.type === "set" && selectedTime) {
+    setShowTimePicker(false);
+
+    if (event.type === "dismissed") {
+      return;
+    }
+
+    if (selectedTime) {
       setTime(selectedTime);
     }
-    setShowTimePicker(false);
   };
 
   const addTask = async () => {
