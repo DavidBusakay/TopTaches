@@ -3,9 +3,9 @@ import CustomBtn from "@/components/CustomBtn";
 import CustomInput from "@/components/CustomInput";
 import TaskPreview from "@/components/TaskPreview";
 import Colors from "@/constants/Colors";
-import STORAGE_KEY from "@/constants/Storage";
 import toggleCategory from "@/functions/toggleCategory";
 import usePoppinsFont from "@/hooks/usePoppinsFont";
+import { scheduleTaskNotification } from "@/services/notification";
 import { Ionicons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import DateTimePicker from "@react-native-community/datetimepicker";
@@ -80,12 +80,17 @@ const AddTaskScreen = () => {
       isModified: false,
       reminder: reminder,
       createdAt: date.toISOString(),
+      notificationId: null,
     };
-    setTasks((prevTasks) => [newTask, ...prevTasks]);
 
     try {
+      if (reminder === true) {
+        const id = await scheduleTaskNotification(newTask);
+        newTask.notificationId = id;
+      }
+      setTasks((prevTasks) => [newTask, ...prevTasks]);
       await AsyncStorage.setItem(
-        STORAGE_KEY,
+        "tasks_list",
         JSON.stringify([newTask, ...tasks])
       );
       showMessage({
@@ -98,7 +103,8 @@ const AddTaskScreen = () => {
       });
       setTitleTask("");
       navigation.goBack();
-    } catch (_) {
+    } catch (e) {
+      console.log(e);
       Alert.alert("Erreur", "Une erreur s'est produite lors de la sauvegarde.");
       return;
     }
@@ -136,6 +142,7 @@ const AddTaskScreen = () => {
                 iconName={
                   categories.find((cat) => cat.selected === true).iconName
                 }
+                isReminded={reminder}
               />
             </View>
 
@@ -156,7 +163,7 @@ const AddTaskScreen = () => {
                   setTitleTask(text);
                   setIsDisable(text.length > 0 ? false : true);
                 }}
-                placeholder="Ex: Je dois faire du sport"
+                placeholder="Ex: Faire du sport"
               />
             </View>
 

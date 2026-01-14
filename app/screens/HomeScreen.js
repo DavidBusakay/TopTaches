@@ -2,7 +2,6 @@ import BottomSheet from "@/components/BottomSheet";
 import Task from "@/components/Task";
 import Colors from "@/constants/Colors";
 import FrConfig from "@/constants/FrConfig";
-import STORAGE_KEY from "@/constants/Storage";
 import countTasks from "@/functions/countTasks";
 import deleteTask from "@/functions/deleteTask";
 import filteredTasks from "@/functions/filteredTasks";
@@ -138,7 +137,7 @@ const HomeScreen = () => {
   useEffect(() => {
     const loadTasks = async () => {
       try {
-        const savedTasks = await AsyncStorage.getItem(STORAGE_KEY);
+        const savedTasks = await AsyncStorage.getItem("tasks_list");
         if (savedTasks !== null) {
           setTasks(JSON.parse(savedTasks));
         }
@@ -160,7 +159,7 @@ const HomeScreen = () => {
   useEffect(() => {
     const saveTasks = async () => {
       try {
-        await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(tasks));
+        await AsyncStorage.setItem("tasks_list", JSON.stringify(tasks));
       } catch (_) {
         showMessage({
           message: "Erreur de sauvegarde",
@@ -224,6 +223,7 @@ const HomeScreen = () => {
               iconName={item.iconName}
               completed={item.completed}
               isModified={item.isModified}
+              isReminded={item.reminder}
               createAt={item.createdAt}
               onToggle={() => toggleTask(item.id, setTasks)}
               onDelete={() => deleteTask(item.id, setTasks)}

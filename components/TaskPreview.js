@@ -8,7 +8,7 @@ import { StyleSheet, Text, View } from "react-native";
 
 dayjs.locale("fr");
 
-const TaskPreview = ({ title, iconName }) => {
+const TaskPreview = ({ title, iconName, isReminded }) => {
   const { fonts } = usePoppinsFont();
   const displayDate = dayjs(Date.now()).format("HH:mm");
 
@@ -17,6 +17,11 @@ const TaskPreview = ({ title, iconName }) => {
       <View style={styles.wrapper}>
         <View style={styles.wrapperIcon}>
           <Ionicons name={iconName} size={25} color={Colors.textWhite} />
+          {isReminded && (
+            <View style={styles.notifIcon}>
+              <Ionicons name="notifications" size={12} color={Colors.primary} />
+            </View>
+          )}
         </View>
         <View style={{ flex: 1 }}>
           <Text
@@ -66,6 +71,14 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.red,
     borderRadius: 10,
     padding: 10,
+  },
+  notifIcon: {
+    position: "absolute",
+    bottom: -5,
+    right: -5,
+    backgroundColor: Colors.whiteGray,
+    padding: 3,
+    borderRadius: 50,
   },
 });
 

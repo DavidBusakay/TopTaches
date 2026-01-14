@@ -4,6 +4,7 @@ import TaskPreview from "@/components/TaskPreview";
 import Colors from "@/constants/Colors";
 import updateTask from "@/functions/updateTask";
 import usePoppinsFont from "@/hooks/usePoppinsFont";
+import { scheduleTaskNotification } from "@/services/notification";
 import { Ionicons } from "@expo/vector-icons";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { useNavigation, useRoute } from "@react-navigation/native";
@@ -16,6 +17,7 @@ import {
   Platform,
   ScrollView,
   StyleSheet,
+  Switch,
   Text,
   TouchableOpacity,
   TouchableWithoutFeedback,
@@ -28,6 +30,7 @@ const UpdateTaskScreen = () => {
   const route = useRoute();
   const { fonts } = usePoppinsFont();
   const { task, setTasks } = route.params || {};
+  const [reminder, setReminder] = useState(task?.reminder ?? true);
 
   const [titleTask, setTitleTask] = useState(task ? task.title : "");
   const [date, setDate] = useState(new Date(task?.createdAt));
@@ -46,23 +49,36 @@ const UpdateTaskScreen = () => {
       Alert.alert("Erreur", "Saisis d'abord le titre de la tâche");
       return;
     }
-    setTasks((prevTasks) =>
-      updateTask(prevTasks, task.id, {
-        title: titleTask,
-        createdAt: date.toISOString(),
-        isModified: true,
-      })
-    );
-    showMessage({
-      message: "Modification",
-      description: "La tâche a été modifiée avec succès !",
-      type: "success",
-      icon: "success",
-      backgroundColor: Colors.primary,
-      duration: 3000,
-    });
-    setTitleTask("");
-    navigation.goBack();
+
+    (async () => {
+      let notificationId = task.notificationId || null;
+      if (reminder) {
+        notificationId = await scheduleTaskNotification({
+          ...task,
+          title: titleTask,
+          createdAt: date.toISOString(),
+        });
+      }
+      setTasks((prevTasks) =>
+        updateTask(prevTasks, task.id, {
+          title: titleTask,
+          createdAt: date.toISOString(),
+          isModified: true,
+          reminder,
+          notificationId,
+        })
+      );
+      showMessage({
+        message: "Modification",
+        description: "La tâche a été modifiée avec succès !",
+        type: "success",
+        icon: "success",
+        backgroundColor: Colors.primary,
+        duration: 3000,
+      });
+      setTitleTask("");
+      navigation.goBack();
+    })();
   };
 
   return (
@@ -161,6 +177,32 @@ const UpdateTaskScreen = () => {
                   timeZoneName="Africa/Kinshasa"
                 />
               )}
+            </View>
+
+            {/* Rappels */}
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+                alignItems: "center",
+                marginBottom: 30,
+              }}
+            >
+              <Text
+                style={{
+                  fontFamily: fonts.medium,
+                  fontSize: 16,
+                  color: Colors.textSecondary,
+                }}
+              >
+                Me rappeler
+              </Text>
+              <Switch
+                value={reminder}
+                onChange={() => setReminder(!reminder)}
+                thumbColor={Colors.primary}
+                accessibilityLabel="Me rappeler"
+              />
             </View>
           </ScrollView>
 

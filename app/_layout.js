@@ -4,12 +4,15 @@ import { StatusBar } from "react-native";
 import FlashMessage from "react-native-flash-message";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import AppNavigator from "./navigations/AppNavigator";
+import { requestNotificationPermissions } from "@/services/notification";
 
 const RootLayout = () => {
   const [initialRoute, setInitialRoute] = useState(null);
   const [appReady, setAppReady] = useState(false);
 
   useEffect(() => {
+    requestNotificationPermissions();
+
     const checkUser = async () => {
       try {
         const user = await AsyncStorage.getItem("user");

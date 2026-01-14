@@ -23,6 +23,7 @@ const Task = ({
   iconName,
   completed,
   isModified,
+  isReminded,
   createAt,
   onToggle,
   onDelete,
@@ -31,7 +32,6 @@ const Task = ({
   const swipeableRef = useRef();
   const { fonts } = usePoppinsFont();
 
-  
   const renderRightActions = (progression, drag) => {
     return (
       <TouchableOpacity
@@ -107,6 +107,15 @@ const Task = ({
             ]}
           >
             <Ionicons name={iconName} size={25} color={Colors.textWhite} />
+            {isReminded && (
+              <View style={styles.notifIcon}>
+                <Ionicons
+                  name="notifications"
+                  size={12}
+                  color={Colors.primary}
+                />
+              </View>
+            )}
           </View>
           <View style={{ flex: 1 }}>
             <Text
@@ -166,6 +175,14 @@ const styles = StyleSheet.create({
   wrapperIcon: {
     borderRadius: 10,
     padding: 10,
+  },
+  notifIcon: {
+    position: "absolute",
+    bottom: -5,
+    right: -5,
+    backgroundColor: Colors.whiteGray,
+    padding: 3,
+    borderRadius: 50,
   },
 });
 
