@@ -1,50 +1,62 @@
-# Welcome to your Expo app 👋
+# TopTâches
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+**TopTâches** est une application mobile de gestion de tâches (To-Do List) minimaliste et intuitive, développée avec **React Native** et **Expo**. Elle aide les utilisateurs à organiser leur quotidien grâce à un système de rappels intelligents.
 
-## Get started
+---
 
-1. Install dependencies
+## Aperçu
 
-   ```bash
-   npm install
-   ```
+| Écran Principal | Menu Latéral | Ajout de Tâche |
+| :---: | :---: | :---: |
+| ![Home](./assets/images/screenshots/home.png) | ![Drawer](./assets/images/screenshots/drawer.png) | ![Add](./assets/images/screenshots/add.png) |
 
-2. Start the app
+---
 
-   ```bash
-   npx expo start
-   ```
+## Fonctionnalités
 
-In the output, you'll find options to open the app in a
+- **Gestion de tâches :** Créer, cocher et supprimer des tâches en un clic.
+- **Rappels Intelligents :** Planification de notifications locales avec sélecteur de date et d'heure.
+- **Logique de Notification Dynamique :**
+    - Annulation automatique du rappel si la tâche est complétée.
+    - Reprogrammation automatique si une tâche est décochée (si l'heure n'est pas passée).
+- **Interface Épurée :** Design soigné avec une palette de couleurs apaisante.
+- **Navigation Personnalisée :** Menu latéral (Drawer).
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+---
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+## Stack Technique
 
-## Get a fresh project
+- **Framework :** [React Native](https://reactnative.dev/) (Expo SDK 50+)
+- **Navigation :** [React Navigation](https://reactnavigation.org/docs/getting-started)
+- **Dates & Heures :** [day.js](https://day.js.org/) & `@react-native-community/datetimepicker`
+- **Notifications :** `expo-notifications`
+- **Stockage :** `@react-native-async-storage/async-storage`
 
-When you're ready, run:
+---
 
-```bash
-npm run reset-project
-```
+## Installation et Lancement
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+1. **Cloner le projet**
+    ```bash
+    git clone https://github.com/DavidBusakay/TopTaches
+    ```
+    
+    ```bash
+    cd toptaches
+    ```
 
-## Learn more
+2. **Installer les dépendances**
+    ```bash
+    npm install
+    ```
 
-To learn more about developing your project with Expo, look at the following resources:
+3. **Lancer l'application**
+    ```bash
+    npx expo start
+    ```
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+---
 
-## Join the community
+### Développeur David Busakay
 
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+- Portfolio : https://davidbusakay.vercel.app/
